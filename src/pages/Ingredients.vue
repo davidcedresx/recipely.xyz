@@ -29,15 +29,18 @@ export default {
 <template>
   <navbar />
 
-  <div class="container pt-6">
-    <div class="title is-1 pb-4">Ingredients</div>
+  <div class="container px-4 pt-6">
+    <div class="is-flex is-justify-content-space-between">
+      <div class="title is-1 pb-4">Ingredients</div>
+      <button class="button is-primary"><i class="fa fa-plus" /></button>
+    </div>
 
     <p v-if="state.loading" class="subtitle">Fetching</p>
     <p v-if="state.error" class="subtitle">Something went wrong: {{ state.error }}</p>
 
     <div class="columns is-multiline">
       <div
-        class="column"
+        class="column is-3"
         v-for="ingredient in state.ingredients"
         :key="ingredient.name"
       >

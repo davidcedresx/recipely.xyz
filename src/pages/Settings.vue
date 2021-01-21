@@ -24,7 +24,7 @@ export default {
 <template>
   <navbar />
 
-  <div class="container pt-6">
+  <div class="container px-4 pt-6">
     <div class="title is-1">Settings</div>
     <form @submit.prevent="onSave">
       <div class="field">

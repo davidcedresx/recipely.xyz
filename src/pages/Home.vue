@@ -37,7 +37,7 @@ export default {
 </script>
 
 <template>
-  <div class="container mt-6">
+  <div class="container px-4 mt-6">
     <h1 class="title is-1">Recipely</h1>
     <form @submit.prevent="submit">
       <div class="field">
