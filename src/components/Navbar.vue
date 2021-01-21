@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar" role="navigation" aria-label="main navigation" style="    background: linear-gradient(-45deg,#0193c9,#1fbc94);">
+  <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/recipes">
         <img src="/logo.svg" width="112" height="28" />

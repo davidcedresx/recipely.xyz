@@ -1,19 +1,19 @@
 <script>
-import { Recipes } from "../api";
+import { Ingredients } from "../api";
 import { onMounted, reactive } from "vue";
 import IngredientCard from "../components/IngredientCard.vue";
 import Navbar from "../components/Navbar.vue";
 
 export default {
-  name: "recipes",
+  name: "Ingredients",
   components: { Navbar, IngredientCard },
   setup() {
-    const state = reactive({ recipes: [], loading: false, error: null });
+    const state = reactive({ ingredients: [], loading: false, error: null });
 
     onMounted(async () => {
       try {
         state.loading = true;
-        state.recipes = await Recipes.get();
+        state.ingredients = await Ingredients.get();
       } catch (error) {
         state.error = error.message;
       }
@@ -30,7 +30,7 @@ export default {
   <navbar />
 
   <div class="container pt-6">
-    <div class="title is-1 pb-4">recipes</div>
+    <div class="title is-1 pb-4">Ingredients</div>
 
     <p v-if="state.loading" class="subtitle">Fetching</p>
     <p v-if="state.error" class="subtitle">Something went wrong: {{ state.error }}</p>
@@ -38,10 +38,10 @@ export default {
     <div class="columns is-multiline">
       <div
         class="column"
-        v-for="recipe in state.recipes"
-        :key="recipe.name"
+        v-for="ingredient in state.ingredients"
+        :key="ingredient.name"
       >
-        <ingredient-card :ingredient="recipe" />
+        <ingredient-card :ingredient="ingredient" />
       </div>
     </div>
   </div>
