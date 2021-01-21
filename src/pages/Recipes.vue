@@ -14,13 +14,13 @@ export default {
       loading: false,
       error: null,
       modal: false,
-      selected: {}
+      selected: {},
     });
 
     onMounted(async () => {
       try {
         state.loading = true;
-        // state.recipes = await Recipes.get();
+        state.recipes = await Recipes.get();
       } catch (error) {
         state.error = error.message;
       }
@@ -29,10 +29,16 @@ export default {
     });
 
     function add() {
+      state.selected = {}
       state.modal = true;
     }
 
-    return { state, add };
+    function select(recipe) {
+      state.selected = recipe
+      state.modal = true;
+    }
+
+    return { state, select, add };
   },
 };
 </script>
@@ -59,10 +65,14 @@ export default {
         v-for="recipe in state.recipes"
         :key="recipe.name"
       >
-        <recipe-card :recipe="recipe" />
+        <recipe-card :recipe="recipe" @click="select(recipe)" />
       </div>
     </div>
   </div>
 
-  <recipe-modal v-if="state.modal" @close="state.modal = false" :recipe="state.selected" />
+  <recipe-modal
+    v-if="state.modal"
+    @close="state.modal=false"
+    :recipe="state.selected"
+  />
 </template>

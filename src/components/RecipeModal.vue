@@ -1,8 +1,10 @@
 <script>
 import { reactive, onMounted } from "vue";
 import { Ingredients } from "../api";
+import DeleteConfimationModal from "./DeleteConfimationModal.vue";
 
 export default {
+  components: { DeleteConfimationModal },
   name: "RecipeModal",
   props: { recipe: Object },
   emits: ["close"],
@@ -14,6 +16,7 @@ export default {
       },
       ingredients: {},
       loading: false,
+      _delete: false,
       error: null,
     });
 
@@ -54,11 +57,25 @@ export default {
       );
     }
 
+    function confirmateDelete() {
+      state._delete = true;
+    }
+
+    function closeConfirmateDelete() {
+      state._delete = false;
+    }
+
+    function deleteRecipe() {
+      console.log("deleting recipe", state.selected, "talk to API here");
+    }
+
     return {
       state,
       close,
       addIngredient,
       removeIngredient,
+      closeConfirmateDelete,
+      deleteRecipe,
     };
   },
 };
@@ -69,7 +86,7 @@ export default {
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Create recipe</p>
+        <p class="modal-card-title">Recipe</p>
         <button class="delete" aria-label="close" @click="close"></button>
       </header>
       <section class="modal-card-body">
@@ -117,12 +134,25 @@ export default {
               ></button>
             </span>
           </div>
-          <!-- <p v-if="state.error" class="has-text-danger">{{ state.error }}</p> -->
+          <p v-if="state.error" class="has-text-danger">{{ state.error }}</p>
         </form>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-primary">Save</button>
+        <div class="is-flex is-justify-content-space-between">
+          <button class="button is-primary">
+            <i class="fa fa-save mr-2" /> Save
+          </button>
+          <button class="button is-warning" @click="confirmateDelete">
+            <i class="fa fa-trash mr-2" /> Delete
+          </button>
+        </div>
       </footer>
     </div>
   </div>
+
+  <delete-confimation-modal
+    v-if="state._delete"
+    @confirmed="deleteRecipe"
+    @close="closeConfirmateDelete"
+  />
 </template>
