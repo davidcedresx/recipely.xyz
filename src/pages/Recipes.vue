@@ -30,7 +30,7 @@ export default {
   <navbar />
 
   <div class="container pt-6">
-    <div class="title is-1 pb-4">recipes</div>
+    <div class="title is-1 pb-4">Recipes</div>
 
     <p v-if="state.loading" class="subtitle">Fetching</p>
     <p v-if="state.error" class="subtitle">Something went wrong: {{ state.error }}</p>
