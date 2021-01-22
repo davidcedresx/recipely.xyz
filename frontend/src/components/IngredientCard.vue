@@ -13,11 +13,6 @@ export default {
       </p>
       <p class="subtitle">${{ ingredient.price }}</p>
     </div>
-    <footer class="card-footer">
-      <a href="#" class="card-footer-item">Save</a>
-      <a href="#" class="card-footer-item">Edit</a>
-      <a href="#" class="card-footer-item">Delete</a>
-    </footer>
   </div>
 </template>
 
@@ -53,6 +48,7 @@ export default {
   -webkit-transform: scale(1.1, 1.1);
   transform: scale(1.1, 1.1);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
 
 .card:hover::after {

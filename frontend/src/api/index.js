@@ -5,6 +5,14 @@ function getToken() {
     return localStorage.getItem('token')
 }
 
+function getHeaders() {
+    return {
+        "Authorization": "Bearer " + getToken(),
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    }
+}
+
 export const Auth = {
     async login(username, password) {
         return new Promise(async (resolve, reject) => {
@@ -12,10 +20,7 @@ export const Auth = {
                 const response = await fetch(`${API_URL}/auth/signin`, {
                     method: "POST",
                     body: JSON.stringify({ username, password }),
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                    }
+                    headers: getHeaders()
                 });
 
                 if (!response.ok) {
@@ -37,10 +42,7 @@ export const Ingredients = {
             try {
                 const response = await fetch(`${API_URL}/ingredients`, {
                     method: "GET",
-                    headers: {
-                        "Authorization": "Bearer " + getToken(),
-                        "Accept": "application/json",
-                    },
+                    headers: getHeaders()
                 });
                 const data = await response.json();
                 resolve(data);
@@ -58,10 +60,7 @@ export const Recipes = {
             try {
                 const response = await fetch(`${API_URL}/recipes/`, {
                     method: "GET",
-                    headers: {
-                        "Authorization": "Bearer " + getToken(),
-                        "Accept": "application/json",
-                    },
+                    headers: getHeaders()
                 });
                 const data = await response.json();
                 resolve(data);
@@ -71,4 +70,66 @@ export const Recipes = {
             }
         });
     },
+    async create(recipe) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`${API_URL}/recipes/`, {
+                    method: "POST",
+                    headers: getHeaders(),
+                    body: JSON.stringify(recipe)
+                })
+
+                if (!response.ok) {
+                    throw new Error(await response.text())
+                }
+
+                const data = await response.json()
+                resolve(data);
+            }
+            catch (error) {
+                reject(error)
+            }
+        })
+    },
+    async update(id, recipe) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`${API_URL}/recipes/${id}`, {
+                    method: "PUT",
+                    headers: getHeaders(),
+                    body: JSON.stringify(recipe)
+                })
+
+                if (!response.ok) {
+                    throw new Error(await response.text())
+                }
+
+                const data = await response.json()
+                resolve(data);
+            }
+            catch (error) {
+                reject(error)
+            }
+        })
+    },
+    async delete(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`${API_URL}/recipes/${id}`, {
+                    method: "DELETE",
+                    headers: getHeaders()
+                })
+
+                if (!response.ok) {
+                    throw new Error(await response.text())
+                }
+
+                const data = await response.json()
+                resolve(data);
+            }
+            catch (error) {
+                reject(error)
+            }
+        })
+    }
 };

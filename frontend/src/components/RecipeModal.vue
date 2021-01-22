@@ -1,12 +1,12 @@
 <script>
 import { reactive, onMounted } from "vue";
-import { Ingredients } from "../api";
+import { Ingredients, Recipes } from "../api";
 import DeleteConfimationModal from "./DeleteConfimationModal.vue";
 
 export default {
   components: { DeleteConfimationModal },
   name: "RecipeModal",
-  props: { recipe: Object },
+  props: { recipe: Object, action: String },
   emits: ["close"],
   setup(props, context) {
     const state = reactive({
@@ -18,6 +18,7 @@ export default {
       loading: false,
       _delete: false,
       error: null,
+      action: props.action
     });
 
     onMounted(async () => {
@@ -28,7 +29,7 @@ export default {
         const ingredients = await Ingredients.get();
 
         ingredients.forEach((ing) => {
-          state.ingredients[ing.id] = ing;
+          state.ingredients[ing._id] = ing;
         });
       } catch (error) {
         state.error = error.message;
@@ -57,16 +58,34 @@ export default {
       );
     }
 
-    function confirmateDelete() {
+    function showDeleteModal() {
       state._delete = true;
     }
 
-    function closeConfirmateDelete() {
+    function closeDeleteModal() {
       state._delete = false;
     }
 
-    function deleteRecipe() {
-      console.log("deleting recipe", state.selected, "talk to API here");
+    async function onCreate() {
+      const recipe = await Recipes.create({ name: state.recipe.name })
+      console.log('created ', recipe)
+    }
+
+    async function onEdit() {
+      const recipe = await Recipes.update(props.recipe._id, { name: state.recipe.name })
+      console.log('updated', recipe)
+    }
+
+    async function onDelete() {
+      console.log('hola borando papu')
+      await Recipes.delete(props.recipe._id)
+      close()
+    }
+
+    async function onSave() {
+      if (state.action === 'edit') await onEdit()
+      if (state.action === 'add') await onCreate()
+      close()
     }
 
     return {
@@ -74,8 +93,10 @@ export default {
       close,
       addIngredient,
       removeIngredient,
-      closeConfirmateDelete,
-      deleteRecipe,
+      closeDeleteModal,
+      onDelete,
+      showDeleteModal,
+      onSave
     };
   },
 };
@@ -139,20 +160,20 @@ export default {
       </section>
       <footer class="modal-card-foot">
         <div class="is-flex is-justify-content-space-between">
-          <button class="button is-primary">
+          <button class="button is-primary" @click="onSave">
             <i class="fa fa-save mr-2" /> Save
           </button>
-          <button class="button is-warning" @click="confirmateDelete">
+          <button class="button is-warning" v-if="state.action === 'edit'" @click="showDeleteModal">
             <i class="fa fa-trash mr-2" /> Delete
           </button>
         </div>
       </footer>
     </div>
-  </div>
 
-  <delete-confimation-modal
-    v-if="state._delete"
-    @confirmed="deleteRecipe"
-    @close="closeConfirmateDelete"
-  />
+    <delete-confimation-modal
+      v-if="state._delete"
+      @confirmed="onDelete"
+      @close="closeDeleteModal"
+    />
+  </div>
 </template>
