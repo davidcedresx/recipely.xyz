@@ -1,23 +1,23 @@
 <script>
 import Navbar from "../components/Navbar.vue";
 
-import { reactive } from 'vue'
+import { reactive } from "vue";
 
 export default {
   name: "Ingredients",
   components: { Navbar },
   setup() {
-      const state = reactive({ password: '', profit: '' })
+    const state = reactive({ password: "", profit: "" });
 
-      function onSave () {
-          console.log('savin bro')
-      }
+    function onSave() {
+      console.log("savin bro");
+    }
 
-      return {
-          state,
-          onSave
-      }
-  }
+    return {
+      state,
+      onSave,
+    };
+  },
 };
 </script>
 
@@ -40,7 +40,7 @@ export default {
         </div>
       </div>
 
-    <div class="field">
+      <div class="field">
         <label class="label">Profit</label>
         <div class="control">
           <input

@@ -1,6 +1,6 @@
 <script>
 import { reactive } from "vue";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 import { Auth } from "../api";
 
 export default {
@@ -13,7 +13,7 @@ export default {
       error: null,
     });
 
-    const router = useRouter()
+    const router = useRouter();
 
     async function submit(e) {
       e.preventDefault();
@@ -22,8 +22,9 @@ export default {
 
       try {
         const { token } = await Auth.login(state.username, state.password);
-        router.push('/recipes')
+        localStorage.setItem('token', token)
 
+        router.push("/recipes");
       } catch (error) {
         state.error = error.message;
       }

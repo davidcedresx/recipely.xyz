@@ -36,7 +36,9 @@ export default {
     </div>
 
     <p v-if="state.loading" class="subtitle">Fetching</p>
-    <p v-if="state.error" class="subtitle">Something went wrong: {{ state.error }}</p>
+    <p v-if="state.error" class="subtitle">
+      Something went wrong: {{ state.error }}
+    </p>
 
     <div class="columns is-multiline">
       <div

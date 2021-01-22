@@ -1,8 +1,8 @@
 <script>
 export default {
-    name: 'IngredientCard',
-    props: { ingredient: Object }
-}
+  name: "IngredientCard",
+  props: { ingredient: Object },
+};
 </script>
 
 <template>

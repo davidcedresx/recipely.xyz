@@ -1,3 +1,16 @@
+<script>
+export default {
+  name: 'Navbar',
+  setup() {
+    function logout () {
+      localStorage.removeItem('token')
+    }
+    
+    return { logout }
+  }
+}
+</script>
+
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
@@ -33,7 +46,7 @@
             <router-link to="/settings" class="button is-primary">
               <strong><i class="fa fa-cog" /> Settings</strong>
             </router-link>
-            <router-link to="/" class="button is-light"
+            <router-link to="/" class="button is-light" @click="logout"
               ><i class="fa fa-sign-out-alt"
             /></router-link>
           </div>

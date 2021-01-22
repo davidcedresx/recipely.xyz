@@ -29,12 +29,12 @@ export default {
     });
 
     function add() {
-      state.selected = {}
+      state.selected = {};
       state.modal = true;
     }
 
     function select(recipe) {
-      state.selected = recipe
+      state.selected = recipe;
       state.modal = true;
     }
 
@@ -72,7 +72,7 @@ export default {
 
   <recipe-modal
     v-if="state.modal"
-    @close="state.modal=false"
+    @close="state.modal = false"
     :recipe="state.selected"
   />
 </template>
