@@ -1,136 +1,176 @@
 <script>
-import { reactive } from 'vue'
-import { Ingredients } from '../api'
-import DeleteConfimationModal from './DeleteConfimationModal.vue'
+import { reactive } from "vue"
+import { Ingredients } from "../api"
+import { copy } from "../utils"
+import DeleteConfimationModal from "./DeleteConfimationModal.vue"
 
 export default {
-    components: { DeleteConfimationModal },
-    name: 'IngredientModal',
-    props: { ingredient: Object, action: String },
-    emits: ['close'],
-    setup(props, context) {
-        const state = reactive({
-            ingredient: {
-                name: props.ingredient.name,
-                price: props.ingredient.price
-            },
-            loading: false,
-            delete: false,
-            error: null,
-            action: props.action,
-        })
+  components: { DeleteConfimationModal },
+  name: "IngredientModal",
+  props: { ingredient: Object, action: String },
+  emits: ["close"],
+  setup(props, context) {
+    const state = reactive({
+      ingredient: copy(props.ingredient),
+      loading: false,
+      delete: false,
+      error: null
+    })
 
-        function close() {
-            context.emit('close')
-        }
+    function close() {
+      context.emit("close")
+    }
 
-        function showDeleteModal() {
-            state.delete = true
-        }
+    function addPresentation() {
+      if (!state.ingredient.presentations) state.ingredient.presentations = []
 
-        function closeDeleteModal() {
-            state.delete = false
-        }
+      state.ingredient.presentations.push({})
+    }
 
-        async function onCreate() {
-            // register the new ingredient
-            await Ingredients.create({ name: state.ingredient.name, price: state.ingredient.price })
-        }
+    function removePresentation(index) {
+        state.ingredient.presentations.splice(index, 1)
+    }
 
-        async function onEdit() {
-            await Ingredients.update(props.ingredient._id, {
-                name: state.ingredient.name,
-                price: state.ingredient.price
-            })
-        }
+    function showDeleteModal() {
+      state.delete = true
+    }
 
-        async function onDelete() {
-            await Ingredients.delete(props.ingredient._id)
-            close()
-        }
+    function closeDeleteModal() {
+      state.delete = false
+    }
 
-        async function onSave() {
-            if (state.action === 'edit') await onEdit()
-            if (state.action === 'add') await onCreate()
-            close()
-        }
+    async function onCreate() {
+      await Ingredients.create(copy(state.ingredient))
+    }
 
-        return {
-            state,
-            close,
-            showDeleteModal,
-            closeDeleteModal,
-            onDelete,
-            onSave,
-        }
-    },
+    async function onEdit() {
+      await Ingredients.update(props.ingredient._id, copy(state.ingredient))
+    }
+
+    async function onDelete() {
+      await Ingredients.delete(props.ingredient._id)
+      close()
+    }
+
+    async function onSave() {
+      if (props.action === "edit") await onEdit()
+      if (props.action === "add") await onCreate()
+      close()
+    }
+
+    return {
+      state,
+      close,
+      addPresentation,
+      removePresentation,
+      showDeleteModal,
+      closeDeleteModal,
+      onDelete,
+      onSave
+    }
+  }
 }
 </script>
 
 <template>
-    <div class="modal is-active">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Ingredient</p>
-                <button
-                    class="delete"
-                    aria-label="close"
-                    @click="close"
-                ></button>
-            </header>
-            <section class="modal-card-body">
-                <form @submit.prevent="submit">
-                    <div class="field">
-                        <label class="label">Name</label>
-                        <div class="control">
-                            <input
-                                class="input"
-                                type="text"
-                                placeholder="name"
-                                v-model="state.ingredient.name"
-                                required
-                            />
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Price</label>
-                        <div class="control">
-                            <input
-                                class="input"
-                                type="text"
-                                placeholder="price"
-                                v-model.number="state.ingredient.price"
-                                required
-                            />
-                        </div>
-                    </div>
-                </form>
-
-                <p v-if="state.error" class="has-text-danger">
-                    {{ state.error }}
+  <div class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">{{ action === 'add' ? 'Create' : 'Edit' }} Ingredient</p>
+        <button class="delete" aria-label="close" @click="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="field">
+          <label class="label">Name</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              placeholder="name"
+              v-model="state.ingredient.name"
+              required
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Presentations</label>
+          <div
+            class="field is-horizontal"
+            v-for="(presentation, index) in state.ingredient.presentations"
+            :key="index"
+          >
+            <div class="field-body">
+              <div class="field">
+                <p class="control is-expanded">
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="price"
+                    v-model="state.ingredient.presentations[index].price"
+                  />
                 </p>
-            </section>
-            <footer class="modal-card-foot">
-                <div class="is-flex is-justify-content-space-between">
-                    <button class="button is-primary" @click="onSave">
-                        <i class="fa fa-save mr-2" /> Save
-                    </button>
-                    <button
-                        class="button is-warning"
-                        v-if="state.action === 'edit'"
-                        @click="showDeleteModal"
-                    >
-                        <i class="fa fa-trash mr-2" /> Delete
-                    </button>
-                </div>
-            </footer>
+              </div>
+              <div class="field">
+                <p class="control is-expanded">
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="amount"
+                    v-model="state.ingredient.presentations[index].amount"
+                  />
+                </p>
+              </div>
+              <div class="field">
+                <p class="control is-expanded">
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="unit"
+                    v-model="state.ingredient.presentations[index].unit"
+                  />
+                </p>
+              </div>
+              <div class="field">
+                <p class="control is-expanded">
+                  <button class="button is-danger" @click="removePresentation(index)">
+                    <span class="icon">
+                      <i class="fas fa-trash"></i>
+                    </span>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="control">
+            <button class="button" @click="addPresentation">Add</button>
+          </div>
         </div>
 
-        <delete-confimation-modal
-            v-if="state.delete"
-            @confirmed="onDelete"
-            @close="closeDeleteModal"
-        />
+        <p v-if="state.error" class="has-text-danger">
+          {{ state.error }}
+        </p>
+      </section>
+      <footer class="modal-card-foot">
+        <div class="is-flex is-justify-content-space-between">
+          <button class="button is-primary" @click="onSave">
+            <i class="fa fa-save mr-2" /> Save
+          </button>
+          <button
+            class="button is-warning"
+            v-if="action === 'edit'"
+            @click="showDeleteModal"
+          >
+            <i class="fa fa-trash mr-2" /> Delete
+          </button>
+        </div>
+      </footer>
     </div>
+
+    <delete-confimation-modal
+      v-if="state.delete"
+      @confirmed="onDelete"
+      @close="closeDeleteModal"
+    />
+  </div>
 </template>
