@@ -1,51 +1,43 @@
-import Router from 'koa-router'
-import { Usage } from '../db'
+import { Usage } from "../db"
+import Router from "koa-router"
 
-const usages = new Router({ prefix: '/usages' })
+const usages = new Router({ prefix: "/usages" })
 
-usages.post('/', async (ctx) => {
-    const { recipe, ingredient } = ctx.request.body
-
-    if (!recipe || !ingredient)
-        throw new Error('recipe and ingredient are required')
-
-    ctx.body = await Usage.create({
-        recipe,
-        ingredient,
-        user: ctx.state.user.id,
-    })
+// todo: check that ingredient are recipe belong to user
+usages.post("/", async (ctx) => {
+  ctx.body = await Usage.create({
+    ...ctx.request.body
+  })
 })
 
-usages.get('/', async (ctx) => {
-    ctx.body = await Usage.find({ user: ctx.state.user.id })
-})
+// DEBUG -- BEGIN
 
-usages.get('/:id', async (ctx) => {
-    ctx.body = await Usage.find({
-        _id: ctx.params.id,
-        user: ctx.state.user.id,
-    })
-})
+// usages.get("/", async (ctx) => {
+//   ctx.body = await Usage.find({ user: ctx.state.user.id })
+// })
 
-usages.put('/:id', async (ctx) => {
-    const usage = await Usage.findOneAndUpdate(
-        { _id: ctx.params.id, user: ctx.state.user.id },
-        ctx.request.body,
-        { new: true }
-    )
-    if (!usage) throw new Error('usage not found')
+// usages.get("/:id", async (ctx) => {
+//   ctx.body = await Usage.find({
+//     _id: ctx.params.id,
+//     user: ctx.state.user.id
+//   })
+// })
 
-    ctx.body = usage
-})
+// usages.put("/:id", async (ctx) => {
+//   ctx.body = await Usage.findOneAndUpdate(
+//     { _id: ctx.params.id, user: ctx.state.user.id },
+//     ctx.request.body,
+//     { new: true }
+//   )
+// })
 
-usages.delete('/:id', async (ctx) => {
-    const usage = await Usage.findOneAndDelete({
-        _id: ctx.params.id,
-        user: ctx.state.user.id,
-    })
-    if (!usage) throw new Error('usage not found')
+// DEBUG -- END
 
-    ctx.body = usage
+// todo: check that ingredient are recipe belong to user
+usages.delete("/:id", async (ctx) => {
+  ctx.body = await Usage.findOneAndDelete({
+    _id: ctx.params.id,
+  })
 })
 
 export default usages.routes()
