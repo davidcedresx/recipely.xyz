@@ -2,6 +2,7 @@
 import { reactive } from "vue"
 import { Ingredients } from "../api"
 import { copy } from "../utils"
+import { units } from '../constants'
 import DeleteConfimationModal from "./DeleteConfimationModal.vue"
 
 export default {
@@ -66,7 +67,8 @@ export default {
       showDeleteModal,
       closeDeleteModal,
       onDelete,
-      onSave
+      onSave,
+      units
     }
   }
 }
@@ -122,14 +124,19 @@ export default {
                 </p>
               </div>
               <div class="field">
-                <p class="control is-expanded">
-                  <input
-                    class="input"
-                    type="text"
-                    placeholder="unit"
-                    v-model="state.ingredient.presentations[index].unit"
-                  />
-                </p>
+                <div class="control is-expanded">
+                  <div class="select">
+                    <select v-model="state.ingredient.presentations[index].unit">
+                      <option
+                        v-for="(unit, index) in units"
+                        :key="index"
+                        :value="unit"
+                      >
+                        {{ unit }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
               </div>
               <div class="field">
                 <p class="control is-expanded">
