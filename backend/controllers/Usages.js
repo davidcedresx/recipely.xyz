@@ -12,9 +12,9 @@ usages.post("/", async (ctx) => {
 
 // DEBUG -- BEGIN
 
-// usages.get("/", async (ctx) => {
-//   ctx.body = await Usage.find({ user: ctx.state.user.id })
-// })
+usages.get("/", async (ctx) => {
+  ctx.body = await Usage.find()
+})
 
 // usages.get("/:id", async (ctx) => {
 //   ctx.body = await Usage.find({
@@ -36,7 +36,7 @@ usages.post("/", async (ctx) => {
 // todo: check that ingredient are recipe belong to user
 usages.delete("/:id", async (ctx) => {
   ctx.body = await Usage.findOneAndDelete({
-    _id: ctx.params.id,
+    _id: ctx.params.id
   })
 })
 

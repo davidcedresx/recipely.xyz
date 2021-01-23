@@ -191,21 +191,6 @@ export const Recipes = {
 }
 
 export const Usages = {
-    // async get() {
-    //     return new Promise(async (resolve, reject) => {
-    //         try {
-    //             const response = await fetch(`${API_URL}/recipes/`, {
-    //                 method: 'GET',
-    //                 headers: getHeaders(),
-    //             })
-    //             const data = await response.json()
-    //             resolve(data)
-    //         } catch (error) {
-    //             console.log(error)
-    //             reject('There is trouble getting your recipes')
-    //         }
-    //     })
-    // },
     async create(usage) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -226,43 +211,23 @@ export const Usages = {
             }
         })
     },
-    // async update(id, recipe) {
-    //     return new Promise(async (resolve, reject) => {
-    //         try {
-    //             const response = await fetch(`${API_URL}/recipes/${id}`, {
-    //                 method: 'PUT',
-    //                 headers: getHeaders(),
-    //                 body: JSON.stringify(recipe),
-    //             })
+    async delete(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`${API_URL}/usages/${id}`, {
+                    method: 'DELETE',
+                    headers: getHeaders(),
+                })
 
-    //             if (!response.ok) {
-    //                 throw new Error(await response.text())
-    //             }
+                if (!response.ok) {
+                    throw new Error(await response.text())
+                }
 
-    //             const data = await response.json()
-    //             resolve(data)
-    //         } catch (error) {
-    //             reject(error)
-    //         }
-    //     })
-    // },
-    // async delete(id) {
-    //     return new Promise(async (resolve, reject) => {
-    //         try {
-    //             const response = await fetch(`${API_URL}/recipes/${id}`, {
-    //                 method: 'DELETE',
-    //                 headers: getHeaders(),
-    //             })
-
-    //             if (!response.ok) {
-    //                 throw new Error(await response.text())
-    //             }
-
-    //             const data = await response.json()
-    //             resolve(data)
-    //         } catch (error) {
-    //             reject(error)
-    //         }
-    //     })
-    // },
+                const data = await response.json()
+                resolve(data)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
 }

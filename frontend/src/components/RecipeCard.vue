@@ -11,7 +11,7 @@ export default {
             <p class="title">
                 {{ recipe.name }}
             </p>
-            <p class="subtitle">4 ingredients</p>
+            <p class="subtitle">{{ recipe.usages.length }} ingredients</p>
         </div>
         <!-- <footer class="card-footer">
       <a href="#" class="card-footer-item">Save</a>

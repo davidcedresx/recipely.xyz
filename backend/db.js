@@ -41,8 +41,18 @@ const RecipeSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
     user: { type: mongoose.ObjectId, required: true }
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }
 )
+
+RecipeSchema.virtual("usages", {
+  ref: "Usage",
+  localField: "_id",
+  foreignField: "recipe"
+})
 
 const UsageSchema = new mongoose.Schema({
   recipe: { type: mongoose.ObjectId, required: true },

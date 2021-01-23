@@ -11,15 +11,15 @@ recipes.post("/", async (ctx) => {
 })
 
 recipes.get("/", async (ctx) => {
-  ctx.body = await Recipe.find({ user: ctx.state.user.id })
+  ctx.body = await Recipe.find({ user: ctx.state.user.id }).populate('usages')
 })
 
-recipes.get("/:id", async (ctx) => {
-  ctx.body = await Recipe.find({
-    _id: ctx.params.id,
-    user: ctx.state.user.id
-  })
-})
+// recipes.get("/:id", async (ctx) => {
+//   ctx.body = await Recipe.find({
+//     _id: ctx.params.id,
+//     user: ctx.state.user.id
+//   })
+// })
 
 recipes.put("/:id", async (ctx) => {
   ctx.body = await Recipe.findOneAndUpdate(
