@@ -1,84 +1,87 @@
 <script>
-import { reactive } from "vue";
-import { useRouter } from "vue-router";
-import { Auth } from "../api";
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { Auth } from '../api'
 
 export default {
-  name: "Home",
-  setup() {
-    const state = reactive({
-      username: "",
-      password: "",
-      loading: false,
-      error: null,
-    });
+    name: 'Home',
+    setup() {
+        const state = reactive({
+            username: '',
+            password: '',
+            loading: false,
+            error: null,
+        })
 
-    const router = useRouter();
+        const router = useRouter()
 
-    async function submit(e) {
-      e.preventDefault();
-      state.error = null;
-      state.loading = true;
+        async function submit(e) {
+            e.preventDefault()
+            state.error = null
+            state.loading = true
 
-      try {
-        const { token } = await Auth.login(state.username, state.password);
-        localStorage.setItem('token', token)
+            try {
+                const { token } = await Auth.login(
+                    state.username,
+                    state.password
+                )
+                localStorage.setItem('token', token)
 
-        router.push("/recipes");
-      } catch (error) {
-        state.error = error.message;
-      }
+                router.push('/recipes')
+            } catch (error) {
+                state.error = error.message
+            }
 
-      state.loading = false;
-    }
+            state.loading = false
+        }
 
-    return { state, submit };
-  },
-};
+        return { state, submit }
+    },
+}
 </script>
 
 <template>
-  <div class="container px-4 mt-6">
-    <h1 class="title is-1">Recipely</h1>
-    <form @submit.prevent="submit">
-      <div class="field">
-        <label class="label">username</label>
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            placeholder="username"
-            v-model="state.username"
-            required
-          />
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">password</label>
-        <div class="control">
-          <input
-            class="input"
-            type="password"
-            placeholder="password"
-            v-model="state.password"
-            required
-          />
-        </div>
-      </div>
+    <div class="container px-4 mt-6">
+        <h1 class="title is-1">Recipely</h1>
+        <form @submit.prevent="submit">
+            <div class="field">
+                <label class="label">username</label>
+                <div class="control">
+                    <input
+                        class="input"
+                        type="text"
+                        placeholder="username"
+                        v-model="state.username"
+                        required
+                    />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">password</label>
+                <div class="control">
+                    <input
+                        class="input"
+                        type="password"
+                        placeholder="password"
+                        v-model="state.password"
+                        required
+                    />
+                </div>
+            </div>
 
-      <div class="field">
-        <div class="control">
-          <button
-            class="button is-primary"
-            :class="{ 'is-loading': state.loading }"
-            type="submit"
-          >
-            Submit
-          </button>
-        </div>
-      </div>
+            <div class="field">
+                <div class="control">
+                    <button
+                        class="button is-primary"
+                        :class="{ 'is-loading': state.loading }"
+                        type="submit"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </div>
 
-      <p v-if="state.error" class="has-text-danger">{{ state.error }}</p>
-    </form>
-  </div>
+            <p v-if="state.error" class="has-text-danger">{{ state.error }}</p>
+        </form>
+    </div>
 </template>

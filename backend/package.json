@@ -1,31 +1,31 @@
 {
-  "name": "recipely",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "scripts": {
-    "start": "babel-node app.js",
-    "dev": "nodemon --exec babel-node app.js"
-  },
-  "dependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.11.4",
-    "@babel/node": "^7.10.5",
-    "@babel/preset-env": "^7.11.0",
-    "@koa/cors": "^3.1.0",
-    "@koa/multer": "^3.0.0",
-    "bcrypt": "^5.0.0",
-    "dotenv": "^8.2.0",
-    "jsonwebtoken": "^8.5.1",
-    "koa": "^2.13.0",
-    "koa-body": "^4.2.0",
-    "koa-jwt": "^4.0.0",
-    "koa-logger": "^3.2.1",
-    "koa-router": "^9.4.0",
-    "mongoose": "^5.10.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.4",
-    "prettier": "^2.1.2"
-  }
+    "name": "recipely",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "start": "babel-node app.js",
+        "dev": "nodemon --exec babel-node app.js"
+    },
+    "dependencies": {
+        "@babel/cli": "^7.10.5",
+        "@babel/core": "^7.11.4",
+        "@babel/node": "^7.10.5",
+        "@babel/preset-env": "^7.11.0",
+        "@koa/cors": "^3.1.0",
+        "@koa/multer": "^3.0.0",
+        "bcrypt": "^5.0.0",
+        "dotenv": "^8.2.0",
+        "jsonwebtoken": "^8.5.1",
+        "koa": "^2.13.0",
+        "koa-body": "^4.2.0",
+        "koa-jwt": "^4.0.0",
+        "koa-logger": "^3.2.1",
+        "koa-router": "^9.4.0",
+        "mongoose": "^5.10.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.4",
+        "prettier": "^2.1.2"
+    }
 }
