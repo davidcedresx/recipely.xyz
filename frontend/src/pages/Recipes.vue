@@ -21,9 +21,7 @@ export default {
         onMounted(async () => {
             try {
                 state.loading = true
-                const recipes = await Recipes.get()
-                state.recipes = recipes
-                console.log('got the recipes', recipes)
+                state.recipes = await Recipes.get()
             } catch (error) {
                 state.error = error.message
             }

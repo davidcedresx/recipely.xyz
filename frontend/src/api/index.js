@@ -34,6 +34,26 @@ export const Auth = {
             }
         })
     },
+    async register(username, password) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(`${API_URL}/auth/signup`, {
+                    method: 'POST',
+                    body: JSON.stringify({ username, password }),
+                    headers: getHeaders(),
+                })
+
+                if (!response.ok) {
+                    throw new Error(await response.text())
+                }
+
+                const data = await response.json()
+                resolve(data)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    },
 }
 
 export const Ingredients = {

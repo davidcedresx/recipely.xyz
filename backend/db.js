@@ -40,7 +40,7 @@ const IngredientSchema = new mongoose.Schema({
 const RecipeSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
-    user: { type: mongoose.ObjectId, required: true }
+    user: { type: mongoose.ObjectId, required: true },
   },
   {
     toJSON: { virtuals: true },
@@ -54,9 +54,13 @@ RecipeSchema.virtual("usages", {
   foreignField: "recipe"
 })
 
+RecipeSchema.virtual('price').get(function() {
+  return 99.99
+})
+
 const UsageSchema = new mongoose.Schema({
-  recipe: { type: mongoose.ObjectId, required: true },
-  ingredient: { type: mongoose.ObjectId, required: true },
+  recipe: { type: mongoose.ObjectId, required: true, ref: 'Recipe' },
+  ingredient: { type: mongoose.ObjectId, required: true, ref: 'Ingredient' },
   amount: { type: Number, required: true },
   unit: { type: String, required: true }
 })

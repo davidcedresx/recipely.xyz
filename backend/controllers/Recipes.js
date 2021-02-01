@@ -11,7 +11,9 @@ recipes.post("/", async (ctx) => {
 })
 
 recipes.get("/", async (ctx) => {
-  ctx.body = await Recipe.find({ user: ctx.state.user.id }).populate('usages')
+  ctx.body = await Recipe.find({ user: ctx.state.user.id }).populate({
+    path: 'usages'
+  })
 })
 
 // recipes.get("/:id", async (ctx) => {

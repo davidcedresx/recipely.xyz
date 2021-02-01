@@ -1,8 +1,8 @@
 <script>
 import { copy } from "../utils"
-import { units } from "../constants"
 import { reactive, onMounted, computed } from "vue"
 import { Recipes, Ingredients, Usages } from "../api"
+import { units } from "../constants"
 import DeleteConfimationModal from "./DeleteConfimationModal.vue"
 
 export default {

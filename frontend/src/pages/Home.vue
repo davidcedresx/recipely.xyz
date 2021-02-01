@@ -11,7 +11,7 @@ export default {
       password: "",
       loading: false,
       error: null,
-      tab: "login"
+      action: "login"
     })
 
     const router = useRouter()
@@ -21,10 +21,11 @@ export default {
       state.error = null
       state.loading = true
 
-      try {
-        const { token } = await Auth.login(state.username, state.password)
-        localStorage.setItem("token", token)
+      const api = state.action === "login" ? Auth.login : Auth.register
 
+      try {
+        const { token } = await api(state.username, state.password)
+        localStorage.setItem("token", token)
         router.push("/recipes")
       } catch (error) {
         state.error = error.message
@@ -33,7 +34,12 @@ export default {
       state.loading = false
     }
 
-    return { state, submit }
+    function selectAction(action) {
+      state.error = null
+      state.action = action
+    }
+
+    return { state, submit, selectAction }
   }
 }
 </script>
@@ -44,69 +50,69 @@ export default {
       <div class="column is-5-tablet is-4-desktop is-3-widescreen">
         <h1 class="title is-1 has-text-centered">Recipely</h1>
         <div class="box p-5">
-            <div class="tabs is-centered">
+          <div class="tabs is-centered">
             <ul>
-                <li
-                :class="{ 'is-active': state.tab === 'login' }"
-                @click="state.tab = 'login'"
-                >
+              <li
+                :class="{ 'is-active': state.action === 'login' }"
+                @click="selectAction('login')"
+              >
                 <a>Login</a>
-                </li>
-                <li
-                :class="{ 'is-active': state.tab === 'register' }"
-                @click="state.tab = 'register'"
-                >
+              </li>
+              <li
+                :class="{ 'is-active': state.action === 'register' }"
+                @click="selectAction('register')"
+              >
                 <a>Register</a>
-                </li>
+              </li>
             </ul>
-            </div>
-            <form @submit.prevent="submit">
+          </div>
+          <form @submit.prevent="submit">
             <div class="field">
-                <label class="label">username</label>
-                <div class="control">
+              <label class="label">username</label>
+              <div class="control">
                 <input
-                    class="input"
-                    type="text"
-                    placeholder="username"
-                    v-model="state.username"
-                    required
+                  class="input"
+                  type="text"
+                  placeholder="username"
+                  v-model="state.username"
+                  required
                 />
-                </div>
+              </div>
             </div>
             <div class="field">
-                <label class="label">password</label>
-                <div class="control">
+              <label class="label">password</label>
+              <div class="control">
                 <input
-                    class="input"
-                    type="password"
-                    placeholder="password"
-                    v-model="state.password"
-                    required
+                  class="input"
+                  type="password"
+                  placeholder="password"
+                  v-model="state.password"
+                  required
                 />
-                </div>
+              </div>
             </div>
-            <div v-if="state.tab === 'register'" class="field">
-                <div class="control">
+            <div v-if="state.action === 'register'" class="field">
+              <div class="control">
                 <label class="checkbox">
-                    <input type="checkbox" />
-                    I like donuts
+                  <input type="checkbox" required />
+                  I like donuts
                 </label>
-                </div>
+              </div>
             </div>
             <div class="field">
-                <div class="control">
+              <div class="control">
                 <button
-                    class="button is-primary is-fullwidth"
-                    :class="{ 'is-loading': state.loading }"
-                    type="submit"
+                  class="button is-primary is-fullwidth"
+                  :class="{ 'is-loading': state.loading }"
+                  type="submit"
                 >
-                    {{ state.tab }}
+                  {{ state.action === "register" ? "Join" : "Enter" }}
                 </button>
-                </div>
+              </div>
             </div>
 
             <p v-if="state.error" class="has-text-danger">{{ state.error }}</p>
-            </form>
+          </form>
         </div>
       </div>
     </div>
