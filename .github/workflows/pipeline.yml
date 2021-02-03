@@ -28,6 +28,6 @@ jobs:
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
         script: |
-          cd backend && \
+          cd /opt/app/backend && \
           npm i && \
           pm2 restart server
