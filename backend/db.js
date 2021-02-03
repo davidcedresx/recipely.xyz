@@ -54,7 +54,8 @@ RecipeSchema.virtual("usages", {
   foreignField: "recipe"
 })
 
-RecipeSchema.virtual('price').get(function() {
+RecipeSchema.virtual('price').get(async function() {
+  console.log('calculating price for recipe', this.name)
   return 99.99
 })
 

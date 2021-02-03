@@ -1,7 +1,7 @@
 <script>
-import { reactive } from "vue"
-import { Ingredients } from "../api"
 import { copy } from "../utils"
+import { Ingredients } from "../api"
+import { reactive } from "vue"
 import { units } from '../constants'
 import DeleteConfimationModal from "./DeleteConfimationModal.vue"
 
@@ -104,13 +104,16 @@ export default {
           >
             <div class="field-body">
               <div class="field">
-                <p class="control is-expanded">
+                <p class="control has-icons-left is-expanded">
                   <input
                     class="input"
                     type="text"
                     placeholder="price"
-                    v-model="state.ingredient.presentations[index].price"
+                    v-model.number="state.ingredient.presentations[index].price"
                   />
+                  <span class="icon is-small is-left">
+                    <i class="fa fa-dollar-sign"></i>
+                  </span>
                 </p>
               </div>
               <div class="field">
@@ -119,7 +122,7 @@ export default {
                     class="input"
                     type="text"
                     placeholder="amount"
-                    v-model="state.ingredient.presentations[index].amount"
+                    v-model.number="state.ingredient.presentations[index].amount"
                   />
                 </p>
               </div>
