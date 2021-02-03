@@ -1,4 +1,5 @@
 import { Auth, Ingredients, Recipes, Usages } from "./controllers"
+import { connect } from './db'
 import cors from "@koa/cors"
 import dotenv from "dotenv"
 import Koa from "koa"
@@ -7,6 +8,7 @@ import koaJwt from "koa-jwt"
 import logger from "koa-logger"
 
 dotenv.config()
+
 const app = new Koa()
 
 app.use(cors())
@@ -27,5 +29,7 @@ app.use(koaJwt({ secret: process.env.SECRET }))
 app.use(Recipes)
 app.use(Ingredients)
 app.use(Usages)
+
+connect()
 
 app.listen(process.env.PORT)

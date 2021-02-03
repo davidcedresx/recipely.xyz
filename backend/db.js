@@ -1,23 +1,27 @@
 import mongoose from "mongoose"
 
-// prepare two possible database uris
-const development_uri = "mongodb://localhost:27017/recipely"
-const production_uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}`
 
-// database
-mongoose.connect(
-  process.env.NODE_ENV === "production" ? production_uri : development_uri,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  }
-)
+export const connect = () => {
+  // prepare two possible database uris
+  const development_uri = "mongodb://localhost:27017/recipely"
+  const production_uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
+  console.log(production_uri)
 
-mongoose.set("useCreateIndex", true)
+  mongoose.connect(
+    process.env.NODE_ENV === "production" ? production_uri : development_uri,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    }
+  )
 
-const db = mongoose.connection
-db.on("error", console.error.bind(console, "connection error:"))
-db.once("open", () => console.log("connection stablished"))
+  mongoose.set("useCreateIndex", true)
+
+  const db = mongoose.connection
+  db.on("error", console.error.bind(console, "connection error:"))
+  db.once("open", () => console.log("connection stablished"))
+}
+
 
 // schemas
 const UserSchema = new mongoose.Schema({
@@ -54,7 +58,7 @@ RecipeSchema.virtual("usages", {
   foreignField: "recipe"
 })
 
-RecipeSchema.virtual('price').get(async function() {
+RecipeSchema.virtual('price').get(async function () {
   console.log('calculating price for recipe', this.name)
   return 99.99
 })
