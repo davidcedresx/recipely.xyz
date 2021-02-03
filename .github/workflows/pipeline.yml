@@ -28,7 +28,6 @@ jobs:
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
         script: |
-          cd backend \
-          npm i \
-          pm2 delete server \
-          pm2 start npm --name "server" -- run start
+          cd backend && \
+          npm i && \
+          pm2 restart server
