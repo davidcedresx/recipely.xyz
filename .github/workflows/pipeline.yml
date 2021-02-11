@@ -22,6 +22,7 @@ jobs:
 
     - name: Install dependencies
       uses: appleboy/ssh-action@master
+      uses: actions/setup-node@v1
       with:
         host: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
