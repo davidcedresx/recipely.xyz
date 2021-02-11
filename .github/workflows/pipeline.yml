@@ -22,11 +22,13 @@ jobs:
 
     - name: Install dependencies
       uses: appleboy/ssh-action@master
-      uses: actions/setup-node@v1
       with:
         host: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
         script: |
-          npm --version
+          source /root/.profile && \
+          cd /opt/app/backend && \
+          npm i && \
+          pm2 restart server
