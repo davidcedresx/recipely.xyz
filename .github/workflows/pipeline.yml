@@ -28,7 +28,6 @@ jobs:
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
         script: |
-          whoami && \
           source /root/.profile && \
           cd /opt/app/backend && \
           npm i && \

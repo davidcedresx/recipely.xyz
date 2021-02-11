@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000'
+const API_URL = process.env.NODE_ENV === 'production' ? 'https://api.recipely.xyz'  : 'http://localhost:3000'
 
 function getToken() {
     return localStorage.getItem('token')

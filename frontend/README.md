@@ -1,4 +1,4 @@
-# front2
+# Recipely
 
 ## Project setup
 ```
