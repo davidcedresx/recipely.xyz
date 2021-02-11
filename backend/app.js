@@ -1,6 +1,6 @@
 import { Auth, Ingredients, Recipes, Usages, User } from "./controllers"
 import { connect } from './db'
-import cors from "@koa/cors"
+// import cors from "@koa/cors"
 import dotenv from "dotenv"
 import Koa from "koa"
 import koaBody from "koa-body"
@@ -12,7 +12,7 @@ dotenv.config()
 
 const app = new Koa()
 
-app.use(cors())
+// app.use(cors())
 app.use(koaBody())
 app.use(logger())
 
