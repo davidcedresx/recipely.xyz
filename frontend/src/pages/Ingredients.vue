@@ -1,40 +1,30 @@
 <script>
-import { Ingredients } from "../api"
-import { onMounted, reactive } from "vue"
+import { reactive } from "vue"
 import IngredientCard from "../components/IngredientCard.vue"
 import IngredientModal from "../components/IngredientModal.vue"
 import Navbar from "../components/Navbar.vue"
+import { useStore } from "../store"
 
 export default {
   name: "Ingredients",
   components: { Navbar, IngredientCard, IngredientModal },
   setup() {
-    const state = reactive({ ingredients: [], loading: false, error: null })
-
-    onMounted(async () => {
-      try {
-        state.loading = true
-        state.ingredients = await Ingredients.get()
-      } catch (error) {
-        state.error = error.message
-      }
-
-      state.loading = false
-    })
+    const modal = reactive({ open: false, action: "add", selected: {} })
+    const store = useStore()
 
     function add() {
-      state.action = "add"
-      state.selected = {}
-      state.modal = true
+      modal.action = "add"
+      modal.selected = {}
+      modal.open = true
     }
 
     function select(ingredient) {
-      state.selected = ingredient
-      state.action = "edit"
-      state.modal = true
+      modal.selected = ingredient
+      modal.action = "edit"
+      modal.open = true
     }
 
-    return { state, add, select }
+    return { modal, add, select, store }
   }
 }
 </script>
@@ -51,15 +41,10 @@ export default {
         </button>
       </div>
 
-      <p v-if="state.loading" class="subtitle">Fetching</p>
-      <p v-if="state.error" class="subtitle">
-        Something went wrong: {{ state.error }}
-      </p>
-
       <div class="columns is-multiline">
         <div
           class="column is-3"
-          v-for="ingredient in state.ingredients"
+          v-for="ingredient in store.ingredients"
           :key="ingredient.name"
         >
           <ingredient-card
@@ -69,15 +54,15 @@ export default {
         </div>
       </div>
 
-      <p class="subtitle" v-if="!state.ingredients.length">
+      <p class="subtitle" v-if="!Object.keys(store.ingredients).length">
         Bip. Bup. Bup. You don't have any ingredients
       </p>
 
       <ingredient-modal
-        v-if="state.modal"
-        @close="state.modal = false"
-        :ingredient="state.selected"
-        :action="state.action"
+        v-if="modal.open"
+        @close="modal.open = false"
+        :ingredient="modal.selected"
+        :action="modal.action"
       />
     </div>
   </div>

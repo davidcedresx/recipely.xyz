@@ -4,6 +4,7 @@ import { reactive, onMounted, computed } from "vue"
 import { Recipes, Ingredients, Usages } from "../api"
 import { units } from "../constants"
 import DeleteConfimationModal from "./DeleteConfimationModal.vue"
+import { useStore } from '../store'
 
 export default {
   components: { DeleteConfimationModal },
@@ -19,6 +20,8 @@ export default {
       delete: false,
       error: null
     })
+
+    const store = useStore()
 
     onMounted(async () => {
       try {
@@ -61,15 +64,19 @@ export default {
       delete state.recipe.usages
 
       // register the recipe
-      const { _id } = await Recipes.create(copy(state.recipe))
+      const recipe = await Recipes.create(copy(state.recipe))
 
       // register all usages
-      await Promise.all(
-        usages.map((usage) => {
-          usage.recipe = _id
+      const new_usages = await Promise.all(
+        usages?.map((usage) => {
+          usage.recipe = recipe._id
           return Usages.create(usage)
         })
       )
+
+      // save to store
+      store.recipes[recipe._id] = recipe
+      new_usages?.forEach(usage => store.usages[usage._id] = usage)
     }
 
     async function onEdit() {
@@ -93,6 +100,7 @@ export default {
 
     async function onDelete() {
       await Recipes.delete(props.recipe._id)
+      delete store.recipes[props.recipe._id]
       close()
     }
 

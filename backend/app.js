@@ -1,4 +1,4 @@
-import { Auth, Ingredients, Recipes, Usages } from "./controllers"
+import { Auth, Ingredients, Recipes, Usages, User } from "./controllers"
 import { connect } from './db'
 import cors from "@koa/cors"
 import dotenv from "dotenv"
@@ -29,6 +29,7 @@ app.use(koaJwt({ secret: process.env.SECRET }))
 app.use(Recipes)
 app.use(Ingredients)
 app.use(Usages)
+app.use(User)
 
 connect()
 

@@ -1,7 +1,14 @@
 <script>
+import { useStore } from '../store'
+
 export default {
   name: "RecipeCard",
-  props: { recipe: Object }
+  props: { recipe: Object },
+  setup(props) {
+    const store = useStore()
+    const usages = Object.values(store.usages).filter(usage => usage.recipe === props.recipe._id)
+    return { usages }
+  }
 }
 </script>
 
@@ -11,7 +18,7 @@ export default {
       <p class="title">
         {{ recipe.name }}
       </p>
-      <p class="subtitle">{{ recipe.usages.length }} ingredients</p>
+      <p class="subtitle">{{ Object.keys(usages).length }} ingredients</p>
       <p class="subtitle">
         <strong>$ {{ recipe.price }}</strong>
       </p>

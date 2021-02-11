@@ -1,4 +1,3 @@
-// const API_URL = 'https://6008ff590a54690017fc2a1b.mockapi.io/api/v1'
 const API_URL = 'http://localhost:3000'
 
 function getToken() {
@@ -13,241 +12,106 @@ function getHeaders() {
     }
 }
 
+async function request(url, payload) {
+    const response = await fetch(API_URL + url, { ...payload, headers: getHeaders(), body: JSON.stringify(payload.body) })
+
+    if (!response.ok) {
+        throw new Error(await response.text())
+    }
+
+    return await response.json()
+}
+
 export const Auth = {
-    async login(username, password) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/auth/signin`, {
-                    method: 'POST',
-                    body: JSON.stringify({ username, password }),
-                    headers: getHeaders(),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    login(username, password) {
+        return request(`/auth/signin`, {
+            method: 'POST',
+            body: { username, password },
         })
     },
-    async register(username, password) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/auth/signup`, {
-                    method: 'POST',
-                    body: JSON.stringify({ username, password }),
-                    headers: getHeaders(),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    register(username, password) {
+        console.log('registering ', username, password)
+        return request(`/auth/signup`, {
+            method: 'POST',
+            body: { username, password },
         })
     },
 }
 
+
+export const User = {
+    get() {
+        return request(`/user/`, {
+            method: 'GET'
+        })
+    }
+}
+
 export const Ingredients = {
-    async get() {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/ingredients`, {
-                    method: 'GET',
-                    headers: getHeaders(),
-                })
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                console.log(error)
-                reject('There is trouble getting your ingredients')
-            }
+    get() {
+        return request(`/ingredients`, {
+            method: 'GET',
         })
     },
-    async create(recipe) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/ingredients/`, {
-                    method: 'POST',
-                    headers: getHeaders(),
-                    body: JSON.stringify(recipe),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    create(recipe) {
+        return request(`/ingredients/`, {
+            method: 'POST',
+            body: recipe,
         })
     },
-    async update(id, recipe) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/ingredients/${id}`, {
-                    method: 'PUT',
-                    headers: getHeaders(),
-                    body: JSON.stringify(recipe),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    update(id, recipe) {
+        return request(`/ingredients/${id}`, {
+            method: 'PUT',
+            body: recipe,
         })
     },
-    async delete(id) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/ingredients/${id}`, {
-                    method: 'DELETE',
-                    headers: getHeaders(),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    delete(id) {
+        return request(`/ingredients/${id}`, {
+            method: 'DELETE',
         })
     },
 }
 
 export const Recipes = {
-    async get() {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/recipes/`, {
-                    method: 'GET',
-                    headers: getHeaders(),
-                })
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                console.log(error)
-                reject('There is trouble getting your recipes')
-            }
+    get() {
+        return request(`/recipes/`, {
+            method: 'GET',
         })
     },
-    async create(recipe) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/recipes/`, {
-                    method: 'POST',
-                    headers: getHeaders(),
-                    body: JSON.stringify(recipe),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    create(recipe) {
+        return request(`/recipes/`, {
+            method: 'POST',
+            body: recipe,
         })
     },
-    async update(id, recipe) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/recipes/${id}`, {
-                    method: 'PUT',
-                    headers: getHeaders(),
-                    body: JSON.stringify(recipe),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    update(id, recipe) {
+        return request(`/recipes/${id}`, {
+            method: 'PUT',
+            body: recipe,
         })
     },
-    async delete(id) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/recipes/${id}`, {
-                    method: 'DELETE',
-                    headers: getHeaders(),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    delete(id) {
+        return request(`/recipes/${id}`, {
+            method: 'DELETE',
         })
-    },
+    }
 }
 
 export const Usages = {
-    async create(usage) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/usages/`, {
-                    method: 'POST',
-                    headers: getHeaders(),
-                    body: JSON.stringify(usage),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    get() {
+        return request(`/usages`, {
+            method: 'GET',
         })
     },
-    async delete(id) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(`${API_URL}/usages/${id}`, {
-                    method: 'DELETE',
-                    headers: getHeaders(),
-                })
-
-                if (!response.ok) {
-                    throw new Error(await response.text())
-                }
-
-                const data = await response.json()
-                resolve(data)
-            } catch (error) {
-                reject(error)
-            }
+    create(usage) {
+        return request(`/usages/`, {
+            method: 'POST',
+            body: usage,
         })
     },
+    delete(id) {
+        return request(`/usages/${id}`, {
+            method: 'DELETE',
+        })
+    }
 }

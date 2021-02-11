@@ -1,14 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from './pages/Home.vue'
-import Recipes from './pages/Recipes.vue'
-import Ingredients from './pages/Ingredients.vue'
-import Settings from './pages/Settings.vue'
 
 const routes = [
-    { path: '/', component: Home },
-    { path: '/recipes', component: Recipes },
-    { path: '/settings', component: Settings },
-    { path: '/ingredients', component: Ingredients },
+    { path: '/', component: () => import('./pages/Home.vue') },
+    { path: '/init', component: () => import('./pages/Init.vue') }, 
+    { path: '/recipes', component: () => import('./pages/Recipes.vue') },
+    { path: '/settings', component: () => import('./pages/Settings.vue') },
+    { path: '/ingredients', component: () => import('./pages/Ingredients.vue') },
 ]
 
 const router = createRouter({

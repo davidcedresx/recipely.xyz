@@ -1,47 +1,34 @@
 <script>
-import { onMounted, reactive } from 'vue'
-import { Recipes } from '../api'
+import { reactive } from 'vue'
 import Navbar from '../components/Navbar.vue'
 import RecipeCard from '../components/RecipeCard.vue'
 import RecipeModal from '../components/RecipeModal.vue'
+import { useStore } from '../store'
 
 export default {
     name: 'recipes',
     components: { Navbar, RecipeCard, RecipeModal },
     setup() {
-        const state = reactive({
-            recipes: [],
-            loading: false,
-            error: null,
-            action: null, // add or edit
+        const modal = reactive({
+            action: 'add',
             modal: false,
             selected: {},
         })
-
-        onMounted(async () => {
-            try {
-                state.loading = true
-                state.recipes = await Recipes.get()
-            } catch (error) {
-                state.error = error.message
-            }
-
-            state.loading = false
-        })
+        const store = useStore()
 
         function add() {
-            state.action = 'add'
-            state.selected = {}
-            state.modal = true
+            modal.action = 'add'
+            modal.selected = {}
+            modal.modal = true
         }
 
         function select(recipe) {
-            state.selected = recipe
-            state.action = 'edit'
-            state.modal = true
+            modal.selected = recipe
+            modal.action = 'edit'
+            modal.modal = true
         }
 
-        return { state, select, add }
+        return { modal, select, add, store }
     },
 }
 </script>
@@ -58,31 +45,26 @@ export default {
                 </button>
             </div>
 
-            <p v-if="state.loading" class="subtitle">Fetching</p>
-            <p v-if="state.error" class="subtitle">
-                Something went wrong: {{ state.error }}
-            </p>
-
             <div class="columns is-multiline">
                 <div
                     class="column is-3"
-                    v-for="recipe in state.recipes"
+                    v-for="recipe in store.recipes"
                     :key="recipe.name"
                 >
                     <recipe-card :recipe="recipe" @click="select(recipe)" />
                 </div>
             </div>
 
-            <p class="subtitle" v-if="!state.recipes.length">
+            <p class="subtitle" v-if="!Object.keys(store.recipes).length">
                 Such empty. You don't have any recipes yet
             </p>
         </div>
 
         <recipe-modal
-            v-if="state.modal"
-            @close="state.modal = false"
-            :recipe="state.selected"
-            :action="state.action"
+            v-if="modal.modal"
+            @close="modal.modal = false"
+            :recipe="modal.selected"
+            :action="modal.action"
         />
     </div>
 </template>

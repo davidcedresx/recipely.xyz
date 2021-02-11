@@ -10,28 +10,24 @@ usages.post("/", async (ctx) => {
   })
 })
 
-// DEBUG -- BEGIN
-
 usages.get("/", async (ctx) => {
   ctx.body = await Usage.find()
 })
 
-// usages.get("/:id", async (ctx) => {
-//   ctx.body = await Usage.find({
-//     _id: ctx.params.id,
-//     user: ctx.state.user.id
-//   })
-// })
+usages.get("/:id", async (ctx) => {
+  ctx.body = await Usage.find({
+    _id: ctx.params.id,
+    user: ctx.state.user.id
+  })
+})
 
-// usages.put("/:id", async (ctx) => {
-//   ctx.body = await Usage.findOneAndUpdate(
-//     { _id: ctx.params.id, user: ctx.state.user.id },
-//     ctx.request.body,
-//     { new: true }
-//   )
-// })
-
-// DEBUG -- END
+usages.put("/:id", async (ctx) => {
+  ctx.body = await Usage.findOneAndUpdate(
+    { _id: ctx.params.id, user: ctx.state.user.id },
+    ctx.request.body,
+    { new: true }
+  )
+})
 
 // todo: check that ingredient are recipe belong to user
 usages.delete("/:id", async (ctx) => {

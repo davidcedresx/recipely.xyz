@@ -26,7 +26,7 @@ export default {
       try {
         const { token } = await api(state.username, state.password)
         localStorage.setItem("token", token)
-        router.push("/recipes")
+        router.push("/init")
       } catch (error) {
         state.error = error.message
       }

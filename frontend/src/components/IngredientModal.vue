@@ -4,6 +4,7 @@ import { Ingredients } from "../api"
 import { reactive } from "vue"
 import { units } from '../constants'
 import DeleteConfimationModal from "./DeleteConfimationModal.vue"
+import { useStore } from '../store'
 
 export default {
   components: { DeleteConfimationModal },
@@ -17,6 +18,7 @@ export default {
       delete: false,
       error: null
     })
+    const store = useStore()
 
     function close() {
       context.emit("close")
@@ -41,15 +43,18 @@ export default {
     }
 
     async function onCreate() {
-      await Ingredients.create(copy(state.ingredient))
+      const ingredient = await Ingredients.create(copy(state.ingredient))
+      store.ingredients[ingredient._id] = ingredient
     }
 
     async function onEdit() {
-      await Ingredients.update(props.ingredient._id, copy(state.ingredient))
+      const ingredient = await Ingredients.update(props.ingredient._id, copy(state.ingredient))
+      store.ingredients[ingredient._id] = ingredient
     }
 
     async function onDelete() {
-      await Ingredients.delete(props.ingredient._id)
+      const ingredient = await Ingredients.delete(props.ingredient._id)
+      delete store.ingredients[ingredient._id]
       close()
     }
 

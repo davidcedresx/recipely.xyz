@@ -13,7 +13,6 @@ auth.post("/signup", async (ctx) => {
   })
   await user.save()
   ctx.body = {
-    username: user.username,
     token: jsonwebtoken.sign({ id: user._id }, process.env.SECRET)
   }
 })
@@ -31,7 +30,6 @@ auth.post("/signin", async (ctx) => {
   if (!ok) throw new Error("Wrong passsword")
 
   ctx.body = {
-    username: user.username,
     token: jsonwebtoken.sign({ id: user._id }, process.env.SECRET)
   }
 })

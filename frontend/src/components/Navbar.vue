@@ -1,11 +1,20 @@
 <script>
+import { reactive } from "vue"
+
 export default {
   name: "Navbar",
   setup() {
+    const state = reactive({ open: false })
+
     function logout() {
       localStorage.removeItem("token")
     }
-    return { logout }
+
+    function toggleOpen() {
+      state.open = !state.open
+    }
+
+    return { state, logout, toggleOpen }
   }
 }
 </script>
@@ -14,7 +23,7 @@ export default {
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item" href="/recipes">
-        <img src="/logo.svg" width="112" height="28" />
+        <img src="/logo.svg" width="56" />
       </a>
       <a
         role="button"
@@ -22,6 +31,8 @@ export default {
         aria-label="menu"
         aria-expanded="false"
         data-target="navbar"
+        :class="{ 'is-active': state.open }"
+        @click="toggleOpen"
       >
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -29,7 +40,7 @@ export default {
       </a>
     </div>
 
-    <div id="navbar" class="navbar-menu">
+    <div id="navbar" class="navbar-menu" :class="{ 'is-active': state.open }">
       <div class="navbar-start">
         <router-link class="navbar-item mr-4" to="/recipes"
           ><i class="fa fa-book pr-2" /> Recipes</router-link

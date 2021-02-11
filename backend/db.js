@@ -5,7 +5,6 @@ export const connect = () => {
   // prepare two possible database uris
   const development_uri = "mongodb://localhost:27017/recipely"
   const production_uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
-  console.log(production_uri)
 
   mongoose.connect(
     process.env.NODE_ENV === "production" ? production_uri : development_uri,
@@ -22,11 +21,11 @@ export const connect = () => {
   db.once("open", () => console.log("connection stablished"))
 }
 
-
 // schemas
 const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  profit: { type: Number, default: 0, min: [0, 'Profit must be positive'] }, 
 })
 
 const IngredientSchema = new mongoose.Schema({
@@ -51,12 +50,6 @@ const RecipeSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 )
-
-RecipeSchema.virtual("usages", {
-  ref: "Usage",
-  localField: "_id",
-  foreignField: "recipe"
-})
 
 RecipeSchema.virtual('price').get(async function () {
   console.log('calculating price for recipe', this.name)
