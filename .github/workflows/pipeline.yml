@@ -31,5 +31,5 @@ jobs:
           whoami && \
           source /root/.profile && \
           cd /opt/app/backend && \
-          npm i && \
-          pm2 restart server
+          sudo npm i && \
+          sudo pm2 restart server
