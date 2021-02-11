@@ -5,12 +5,9 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
 
     steps:
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v1
 
     - name: Copy file via scp
       uses: appleboy/scp-action@master
@@ -31,6 +28,4 @@ jobs:
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSHKEY }}
         script: |
-          cd /opt/app/backend && \
-          npm i && \
-          pm2 restart server
+          npm --version
