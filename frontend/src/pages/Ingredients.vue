@@ -1,9 +1,9 @@
 <script>
 import { reactive } from "vue"
+import { useStore } from "../store"
 import IngredientCard from "../components/IngredientCard.vue"
 import IngredientModal from "../components/IngredientModal.vue"
 import Navbar from "../components/Navbar.vue"
-import { useStore } from "../store"
 
 export default {
   name: "Ingredients",

@@ -32,8 +32,8 @@ export default {
             msg.value = 'Fetching your preferenes'
             const user = await api.User.get()
             store.user = user
-            
-            setTimeout(() => router.push('/recipes'), 2000)
+
+            router.push('/recipes')
         }
         catch(error){
             console.log(error)

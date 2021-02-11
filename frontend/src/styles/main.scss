@@ -1,8 +1,9 @@
 @charset "utf-8";
 
-$primary: #8675a9;
-$link: #c3aed6;
-$success: #efbbcf;
-$scheme-invert: $primary;
+$primary: #6886c5;
+$link: #a6b1e1;
+$success: #ffe0ac;
+$scheme-main: #f9f9f9;
+$scheme-invert: #6886c5;
 
 @import "../../node_modules/bulma/bulma.sass";

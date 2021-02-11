@@ -1,13 +1,29 @@
 <script>
-import { useStore } from '../store'
+import { computed } from "vue"
+import { useStore } from "../store"
 
 export default {
   name: "RecipeCard",
   props: { recipe: Object },
   setup(props) {
     const store = useStore()
-    const usages = Object.values(store.usages).filter(usage => usage.recipe === props.recipe._id)
-    return { usages }
+    const usages = computed(() =>
+      Object.values(store.usages).filter(
+        (usage) => usage.recipe === props.recipe._id
+      )
+    )
+    const price = computed(() => usages.value.reduce((acc, usage) => {
+      const presentations = store.ingredients[usage.ingredient].presentations
+
+      // let's assume for now that there must exist a presentation with the same unit as the usage
+      // under this circumstance is just a matter of multiplying
+      const presentation = presentations.find(presentation => presentation.unit === usage.unit)
+      if (!presentation) return -99999
+
+      return acc + usage.amount * presentation.price / presentation.amount
+    }, 0))
+
+    return { usages, price }
   }
 }
 </script>
@@ -20,7 +36,7 @@ export default {
       </p>
       <p class="subtitle">{{ Object.keys(usages).length }} ingredients</p>
       <p class="subtitle">
-        <strong>$ {{ recipe.price }}</strong>
+        <strong>$ {{ price }}</strong>
       </p>
     </div>
   </div>

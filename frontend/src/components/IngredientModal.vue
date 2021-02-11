@@ -2,9 +2,9 @@
 import { copy } from "../utils"
 import { Ingredients } from "../api"
 import { reactive } from "vue"
-import { units } from '../constants'
+import { units } from "../constants"
+import { useStore } from "../store"
 import DeleteConfimationModal from "./DeleteConfimationModal.vue"
-import { useStore } from '../store'
 
 export default {
   components: { DeleteConfimationModal },
@@ -12,13 +12,12 @@ export default {
   props: { ingredient: Object, action: String },
   emits: ["close"],
   setup(props, context) {
+    const store = useStore()
     const state = reactive({
       ingredient: copy(props.ingredient),
-      loading: false,
       delete: false,
       error: null
     })
-    const store = useStore()
 
     function close() {
       context.emit("close")
@@ -31,7 +30,7 @@ export default {
     }
 
     function removePresentation(index) {
-        state.ingredient.presentations.splice(index, 1)
+      state.ingredient.presentations.splice(index, 1)
     }
 
     function showDeleteModal() {
@@ -44,16 +43,24 @@ export default {
 
     async function onCreate() {
       const ingredient = await Ingredients.create(copy(state.ingredient))
+
       store.ingredients[ingredient._id] = ingredient
+      close()
     }
 
     async function onEdit() {
-      const ingredient = await Ingredients.update(props.ingredient._id, copy(state.ingredient))
+      const ingredient = await Ingredients.update(
+        props.ingredient._id,
+        copy(state.ingredient)
+      )
+
       store.ingredients[ingredient._id] = ingredient
+      close()
     }
 
     async function onDelete() {
       const ingredient = await Ingredients.delete(props.ingredient._id)
+
       delete store.ingredients[ingredient._id]
       close()
     }
@@ -61,7 +68,6 @@ export default {
     async function onSave() {
       if (props.action === "edit") await onEdit()
       if (props.action === "add") await onCreate()
-      close()
     }
 
     return {
@@ -84,7 +90,9 @@ export default {
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">{{ action === 'add' ? 'Create' : 'Edit' }} Ingredient</p>
+        <p class="modal-card-title">
+          {{ action === "add" ? "Create" : "Edit" }} Ingredient
+        </p>
         <button class="delete" aria-label="close" @click="close"></button>
       </header>
       <section class="modal-card-body">
@@ -127,14 +135,18 @@ export default {
                     class="input"
                     type="text"
                     placeholder="amount"
-                    v-model.number="state.ingredient.presentations[index].amount"
+                    v-model.number="
+                      state.ingredient.presentations[index].amount
+                    "
                   />
                 </p>
               </div>
               <div class="field">
                 <div class="control is-expanded">
                   <div class="select">
-                    <select v-model="state.ingredient.presentations[index].unit">
+                    <select
+                      v-model="state.ingredient.presentations[index].unit"
+                    >
                       <option
                         v-for="(unit, index) in units"
                         :key="index"
@@ -148,7 +160,10 @@ export default {
               </div>
               <div class="field">
                 <p class="control is-expanded">
-                  <button class="button is-danger" @click="removePresentation(index)">
+                  <button
+                    class="button is-danger"
+                    @click="removePresentation(index)"
+                  >
                     <span class="icon">
                       <i class="fas fa-trash"></i>
                     </span>

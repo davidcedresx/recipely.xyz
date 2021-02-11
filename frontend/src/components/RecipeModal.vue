@@ -1,10 +1,10 @@
 <script>
 import { copy } from "../utils"
-import { reactive, onMounted, computed } from "vue"
-import { Recipes, Ingredients, Usages } from "../api"
+import { reactive } from "vue"
+import { Recipes, Usages } from "../api"
 import { units } from "../constants"
+import { useStore } from "../store"
 import DeleteConfimationModal from "./DeleteConfimationModal.vue"
-import { useStore } from '../store'
 
 export default {
   components: { DeleteConfimationModal },
@@ -12,28 +12,15 @@ export default {
   props: { recipe: Object, action: String },
   emits: ["close"],
   setup(props, context) {
+    const store = useStore()
     const state = reactive({
       recipe: copy(props.recipe),
-      usagesBackup: [],
-      ingredients: [],
+      usages: Object.values(store.usages).filter(
+        (usage) => usage.recipe === props.recipe._id
+      ),
       loading: false,
       delete: false,
       error: null
-    })
-
-    const store = useStore()
-
-    onMounted(async () => {
-      try {
-        state.ingredients = await Ingredients.get()
-      } catch (error) {
-        state.error = error
-      }
-      
-      // backup to delete them later
-      if (props.action === 'edit') {
-        state.usagesBackup = copy(state.recipe.usages)
-      }
     })
 
     function close() {
@@ -41,13 +28,15 @@ export default {
     }
 
     function addUsage() {
-      if (!state.recipe.usages) state.recipe.usages = []
+      if (!state.usages) {
+        state.usages = []
+      }
 
-      state.recipe.usages.push({})
+      state.usages.push({ recipe: state.recipe._id })
     }
 
     function removeUsage(index) {
-      state.recipe.usages.splice(index, 1)
+      state.usages.splice(index, 1)
     }
 
     function showDeleteModal() {
@@ -59,67 +48,69 @@ export default {
     }
 
     async function onCreate() {
-      // usages it's cut of from state cause that will go to another api endpoint
-      const usages = copy(state.recipe.usages)
-      delete state.recipe.usages
-
       // register the recipe
-      const recipe = await Recipes.create(copy(state.recipe))
+      const recipe = await Recipes.create(state.recipe)
 
       // register all usages
       const new_usages = await Promise.all(
-        usages?.map((usage) => {
+        state.usages.map((usage) => {
           usage.recipe = recipe._id
           return Usages.create(usage)
         })
       )
-
-      // save to store
+      new_usages?.forEach((usage) => {
+        store.usages[usage._id] = usage
+      })
       store.recipes[recipe._id] = recipe
-      new_usages?.forEach(usage => store.usages[usage._id] = usage)
+
+      close()
     }
 
     async function onEdit() {
-      // usages it's cut of from state cause that will go to another api endpoint
-      const usages = copy(state.recipe.usages)
-      delete state.recipe.usages
-
       // update the recipe
-      const { _id } = await Recipes.update(props.recipe._id, copy(state.recipe))
+      const recipe = await Recipes.update(props.recipe._id, copy(state.recipe))
+      store.recipes[recipe._id] = recipe
 
-      console.log(state.usagesBackup)
       // remove previous usages
-      await Promise.all(state.usagesBackup.map(usage => Usages.delete(usage._id)))
+      const deleted_usages = await Promise.all(
+        Object.values(store.usages)
+          .filter((usage) => usage.recipe === props.recipe._id)
+          .map((usage) => Usages.delete(usage._id))
+      )
+      deleted_usages.forEach((usage) => delete store.usages[usage._id])
 
       // register new usages
-      await Promise.all(usages.map(usage => {
-        usage.recipe = _id
-        Usages.create(usage)
-      }))
+      const new_usages = await Promise.all(
+        state.usages.map((usage) => Usages.create(usage))
+      )
+      new_usages.forEach((usage) => {
+        store.usages[usage._id] = usage
+      })
+
+      close()
     }
 
     async function onDelete() {
-      await Recipes.delete(props.recipe._id)
-      delete store.recipes[props.recipe._id]
+      const usages = await Promise.all(
+        Object.values(store.usages)
+          .filter((usage) => usage.recipe === props.recipe._id)
+          .map((usage) => Usages.delete(usage._id))
+      )
+      usages.forEach((usage) => delete store.usages[usage._id])
+
+      const recipe = await Recipes.delete(props.recipe._id)
+      delete store.recipes[recipe._id]
+
       close()
     }
 
     async function onSave() {
       if (props.action === "edit") await onEdit()
       if (props.action === "add") await onCreate()
-      close()
     }
 
-    const unusedIngredients = computed(() => {
-      return state.ingredients.filter(
-        (ingredient) =>
-          !state.recipe.usages.some(
-            (usage) => usage.ingredient === ingredient._id
-          )
-      )
-    })
-
     return {
+      store,
       state,
       close,
       addUsage,
@@ -128,7 +119,6 @@ export default {
       closeDeleteModal,
       onDelete,
       onSave,
-      unusedIngredients,
       units
     }
   }
@@ -162,16 +152,16 @@ export default {
           <label class="label">Usages</label>
           <div
             class="field is-horizontal"
-            v-for="(presentation, index) in state.recipe.usages"
+            v-for="(presentation, index) in state.usages"
             :key="index"
           >
             <div class="field-body">
               <div class="field">
                 <div class="control is-expanded">
                   <div class="select">
-                    <select v-model="state.recipe.usages[index].ingredient">
+                    <select v-model="state.usages[index].ingredient">
                       <option
-                        v-for="(ingredient, index) in state.ingredients"
+                        v-for="(ingredient, index) in store.ingredients"
                         :key="index"
                         :value="ingredient._id"
                       >
@@ -187,14 +177,14 @@ export default {
                     class="input"
                     type="text"
                     placeholder="amount"
-                    v-model="state.recipe.usages[index].amount"
+                    v-model="state.usages[index].amount"
                   />
                 </p>
               </div>
               <div class="field">
                 <div class="control is-expanded">
                   <div class="select">
-                    <select v-model="state.recipe.usages[index].unit">
+                    <select v-model="state.usages[index].unit">
                       <option
                         v-for="(unit, index) in units"
                         :key="index"

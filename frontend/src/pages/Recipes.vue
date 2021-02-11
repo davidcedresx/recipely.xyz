@@ -1,9 +1,9 @@
 <script>
 import { reactive } from 'vue'
+import { useStore } from '../store'
 import Navbar from '../components/Navbar.vue'
 import RecipeCard from '../components/RecipeCard.vue'
 import RecipeModal from '../components/RecipeModal.vue'
-import { useStore } from '../store'
 
 export default {
     name: 'recipes',
