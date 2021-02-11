@@ -9,6 +9,7 @@ function getHeaders() {
         Authorization: 'Bearer ' + getToken(),
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        'mode': 'cors'
     }
 }
 
