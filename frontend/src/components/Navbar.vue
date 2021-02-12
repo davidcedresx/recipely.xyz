@@ -29,9 +29,9 @@ export default {
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="/recipes">
+      <router-link class="navbar-item" to="/recipes">
         <img src="/logo.svg" width="56" />
-      </a>
+      </router-link>
       <a
         role="button"
         class="navbar-burger"

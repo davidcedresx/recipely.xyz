@@ -171,6 +171,7 @@ export default {
                 </p>
               </div>
             </div>
+            <hr />
           </div>
           <div class="control">
             <button class="button" @click="addPresentation">Add</button>
