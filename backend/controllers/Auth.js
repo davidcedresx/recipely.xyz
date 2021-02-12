@@ -24,10 +24,10 @@ auth.post("/signin", async (ctx) => {
   if (!password) throw new Error("password missing")
 
   const user = await User.findOne({ username })
-  if (!user) throw new Error("User not found")
+  if (!user) throw new Error("user not found")
 
   const ok = bcrypt.compareSync(password, user.password)
-  if (!ok) throw new Error("Wrong passsword")
+  if (!ok) throw new Error("wrong passsword")
 
   ctx.body = {
     token: jsonwebtoken.sign({ id: user._id }, process.env.SECRET)

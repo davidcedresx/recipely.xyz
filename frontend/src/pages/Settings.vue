@@ -1,15 +1,20 @@
 <script>
 import Navbar from "../components/Navbar.vue"
 import { reactive } from "vue"
+import { User } from "../api"
+import { useStore } from '../store'
 
 export default {
   name: "Ingredients",
   components: { Navbar },
   setup() {
-    const state = reactive({ password: "", profit: "" })
+    const store = useStore()
+    const state = reactive({ password: "", profit: store.user.profit })
 
-    function onSave() {
-      console.log("savin bro")
+    async function onSave() {
+      state.loading = true
+      store.user = await User.update({ profit: state.profit })
+      state.loading = false
     }
 
     return {
@@ -28,7 +33,7 @@ export default {
 
     <div class="columns">
       <form @submit.prevent="onSave" class="column is-3">
-        <div class="field">
+        <!-- <div class="field">
           <label class="label">Update password</label>
           <div class="control">
             <input
@@ -36,10 +41,9 @@ export default {
               type="password"
               placeholder="New password"
               v-model="state.password"
-              required
             />
           </div>
-        </div>
+        </div> -->
 
         <div class="field">
           <label class="label">Profit</label>
@@ -49,7 +53,6 @@ export default {
               type="text"
               placeholder="New password"
               v-model.number="state.profit"
-              required
             />
           </div>
         </div>

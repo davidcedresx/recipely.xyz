@@ -1,4 +1,4 @@
-const API_URL = process.env.NODE_ENV === 'production' ? 'https://api.recipely.xyz'  : 'http://localhost:3000'
+const API_URL = process.env.NODE_ENV === 'production' ? 'https://api.recipely.xyz' : 'http://localhost:3000'
 
 function getToken() {
     return localStorage.getItem('token')
@@ -30,7 +30,6 @@ export const Auth = {
         })
     },
     register(username, password) {
-        console.log('registering ', username, password)
         return request(`/auth/signup`, {
             method: 'POST',
             body: { username, password },
@@ -43,6 +42,12 @@ export const User = {
     get() {
         return request(`/user/`, {
             method: 'GET'
+        })
+    },
+    update(user) {
+        return request(`/user/`, {
+            method: 'PUT',
+            body: user
         })
     }
 }

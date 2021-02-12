@@ -21,7 +21,7 @@ export default {
       if (!presentation) return -99999
 
       return acc + usage.amount * presentation.price / presentation.amount
-    }, 0))
+    }, 0) * (100 + store.user.profit) / 100)
 
     return { usages, price }
   }

@@ -11,7 +11,10 @@ users.get("/", async (ctx) => {
   delete ctx.body.password
 })
 
-users.put("/:id", async (ctx) => {
+users.put("/", async (ctx) => {
+  // forbid changing password
+  delete ctx.request.body.password
+
   ctx.body = await User.findOneAndUpdate(
     { _id: ctx.state.user.id },
     ctx.request.body,
