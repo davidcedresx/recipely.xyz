@@ -91,25 +91,25 @@ export default {
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">
-          {{ action === "add" ? "Create" : "Edit" }} Ingredient
+          {{ action === "add" ? "Añadir" : "Editar" }} Ingrediente
         </p>
         <button class="delete" aria-label="close" @click="close"></button>
       </header>
       <section class="modal-card-body">
         <div class="field">
-          <label class="label">Name</label>
+          <label class="label">Nombre</label>
           <div class="control">
             <input
               class="input"
               type="text"
-              placeholder="name"
+              placeholder="nombre"
               v-model="state.ingredient.name"
               required
             />
           </div>
         </div>
         <div class="field">
-          <label class="label">Presentations</label>
+          <label class="label">Presentaciones</label>
           <div
             class="field is-horizontal"
             v-for="(presentation, index) in state.ingredient.presentations"
@@ -121,7 +121,7 @@ export default {
                   <input
                     class="input"
                     type="text"
-                    placeholder="price"
+                    placeholder="precio"
                     v-model.number="state.ingredient.presentations[index].price"
                   />
                   <span class="icon is-small is-left">
@@ -134,7 +134,7 @@ export default {
                   <input
                     class="input"
                     type="text"
-                    placeholder="amount"
+                    placeholder="cantidad"
                     v-model.number="
                       state.ingredient.presentations[index].amount
                     "
@@ -174,7 +174,7 @@ export default {
             <hr />
           </div>
           <div class="control">
-            <button class="button" @click="addPresentation">Add</button>
+            <button class="button" @click="addPresentation">Añadir</button>
           </div>
         </div>
 
@@ -185,14 +185,14 @@ export default {
       <footer class="modal-card-foot">
         <div class="is-flex is-justify-content-space-between">
           <button class="button is-primary" @click="onSave">
-            <i class="fa fa-save mr-2" /> Save
+            <i class="fa fa-save mr-2" /> Guardar
           </button>
           <button
             class="button is-warning"
             v-if="action === 'edit'"
             @click="showDeleteModal"
           >
-            <i class="fa fa-trash mr-2" /> Delete
+            <i class="fa fa-trash mr-2" /> Borrar
           </button>
         </div>
       </footer>

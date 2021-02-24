@@ -11,7 +11,7 @@ export default {
             <p class="title">
                 {{ ingredient.name }}
             </p>
-            <p class="subtitle">{{ ingredient.presentations.length }} presentations</p>
+            <p class="subtitle">{{ ingredient.presentations.length }} presentaciones</p>
         </div>
     </div>
 </template>

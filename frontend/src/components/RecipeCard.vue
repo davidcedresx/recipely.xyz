@@ -34,7 +34,7 @@ export default {
       <p class="title">
         {{ recipe.name }}
       </p>
-      <p class="subtitle">{{ Object.keys(usages).length }} ingredients</p>
+      <p class="subtitle">{{ Object.keys(usages).length }} ingredientes</p>
       <p class="subtitle">
         <strong>$ {{ price }}</strong>
       </p>

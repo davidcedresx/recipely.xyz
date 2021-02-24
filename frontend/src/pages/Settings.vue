@@ -29,7 +29,7 @@ export default {
   <navbar />
 
   <div class="container px-4 pt-6">
-    <div class="title is-1">Settings</div>
+    <div class="title is-1">Ajustes</div>
 
     <div class="columns">
       <form @submit.prevent="onSave" class="column is-3">
@@ -46,12 +46,12 @@ export default {
         </div> -->
 
         <div class="field">
-          <label class="label">Profit</label>
+          <label class="label">Ganancia Global</label>
           <div class="control">
             <input
               class="input"
-              type="text"
-              placeholder="New password"
+              type="number"
+              placeholder="ganancia"
               v-model.number="state.profit"
             />
           </div>
@@ -64,7 +64,7 @@ export default {
               :class="{ 'is-loading': state.loading }"
               type="submit"
             >
-              Save
+              Guardar
             </button>
           </div>
         </div>

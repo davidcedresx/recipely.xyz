@@ -56,36 +56,36 @@ export default {
                 :class="{ 'is-active': state.action === 'login' }"
                 @click="selectAction('login')"
               >
-                <a>Login</a>
+                <a>Entrar</a>
               </li>
               <li
                 :class="{ 'is-active': state.action === 'register' }"
                 @click="selectAction('register')"
               >
-                <a>Register</a>
+                <a>Registrarse</a>
               </li>
             </ul>
           </div>
           <form @submit.prevent="submit">
             <div class="field">
-              <label class="label">username</label>
+              <label class="label">Usuario</label>
               <div class="control">
                 <input
                   class="input"
                   type="text"
-                  placeholder="username"
+                  placeholder="usuario"
                   v-model="state.username"
                   required
                 />
               </div>
             </div>
             <div class="field">
-              <label class="label">password</label>
+              <label class="label">Contraseña</label>
               <div class="control">
                 <input
                   class="input"
                   type="password"
-                  placeholder="password"
+                  placeholder="contraseña"
                   v-model="state.password"
                   required
                 />
@@ -95,7 +95,7 @@ export default {
               <div class="control">
                 <label class="checkbox">
                   <input type="checkbox" required />
-                  I like donuts
+                  Me gustan las donas
                 </label>
               </div>
             </div>
@@ -106,7 +106,7 @@ export default {
                   :class="{ 'is-loading': state.loading }"
                   type="submit"
                 >
-                  {{ state.action === "register" ? "Join" : "Enter" }}
+                  {{ state.action === "register" ? "Entrar" : "Entrar" }}
                 </button>
               </div>
             </div>

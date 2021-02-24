@@ -55,7 +55,7 @@ export default {
           to="/recipes"
         >
           <i class="fa fa-book pr-2" />
-          Recipes
+          Recetas
         </router-link>
         <router-link
           class="navbar-item"
@@ -63,27 +63,27 @@ export default {
           to="/ingredients"
         >
           <i class="fa fa-bread-slice pr-2" />
-          Ingredients
+          Ingredientes
         </router-link>
       </div>
 
       <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <router-link to="/settings" class="button is-primary">
-              <strong>
-                <i class="fa fa-cog mr-1" />
-                Settings
-              </strong>
-            </router-link>
-            <router-link to="/" class="button is-light" @click="logout">
-              <strong>
-                <i class="fa fa-sign-out-alt mr-1" />
-                Logout
-              </strong>
-            </router-link>
-          </div>
-        </div>
+        <router-link to="/settings" class="is-primary navbar-item navbar-item">
+          <strong>
+            <i class="fa fa-cog mr-1" />
+            Ajustes
+          </strong>
+        </router-link>
+        <router-link
+          to="/"
+          class="is-light navbar-item has-text-danger"
+          @click="logout"
+        >
+          <strong>
+            <i class="fa fa-sign-out-alt mr-1" />
+            Salir
+          </strong>
+        </router-link>
       </div>
     </div>
   </nav>
