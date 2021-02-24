@@ -1,5 +1,5 @@
 <script>
-import { reactive, ref, computed } from "vue"
+import { reactive, ref, computed, watchEffect } from "vue"
 import { useStore } from "../store"
 import Navbar from "../components/Navbar.vue"
 import RecipeCard from "../components/RecipeCard.vue"
@@ -20,8 +20,13 @@ export default {
     const recipes = computed(() =>
       Object.values(store.recipes)
         .sort((a, b) => (a.name > b.name ? 1 : -1))
-        .filter((i) => i.name.search(new RegExp(keyword.value, "i") !== -1))
+        .filter(recipe => recipe.name.toLowerCase().includes(keyword.value.toLowerCase()))
+        // .filter(recipe => recipe.name.search(new RegExp(keyword.value, "i") !== -1))
     )
+
+    watchEffect(() => {
+      console.log('bro', recipes.value, keyword.value, Object.values(store.recipes).map(a => a.name))
+    })
 
     function add() {
       modal.action = "add"
@@ -47,7 +52,7 @@ export default {
     <div class="container px-4 pt-6">
       <div class="is-flex is-justify-content-space-between">
         <div class="title is-1 pb-4">Recetas</div>
-        <button class="button is-primary is-primary" @click="add">
+        <button class="button is-primary" @click="add">
           <i class="fa fa-plus" />
         </button>
       </div>

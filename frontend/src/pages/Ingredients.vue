@@ -16,7 +16,7 @@ export default {
     const ingredients = computed(() =>
       Object.values(store.ingredients)
         .sort((a, b) => (a.name > b.name ? 1 : -1))
-        .filter((i) => i.name.search(new RegExp(keyword.value, "i") !== -1))
+        .filter(ingredient => ingredient.name.toLowerCase().includes(keyword.value.toLowerCase()))
     )
 
     function add() {
