@@ -54,7 +54,7 @@ export default {
           :class="{ 'is-active': routeIs('recipes') }"
           to="/recipes"
         >
-          <i class="fa fa-book pr-2" />
+          <i class="fa fa-cookie pr-2" />
           Recetas
         </router-link>
         <router-link
@@ -62,8 +62,16 @@ export default {
           :class="{ 'is-active': routeIs('ingredients') }"
           to="/ingredients"
         >
-          <i class="fa fa-bread-slice pr-2" />
+          <i class="fa fa-egg pr-2" />
           Ingredientes
+        </router-link>
+        <router-link
+          class="navbar-item"
+          :class="{ 'is-active': routeIs('utensils') }"
+          to="/utensils"
+        >
+          <i class="fa fa-birthday-cake pr-2" />
+          Utensilios
         </router-link>
       </div>
 

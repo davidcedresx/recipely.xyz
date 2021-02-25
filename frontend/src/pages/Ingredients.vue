@@ -43,7 +43,7 @@ export default {
     <div class="container px-4 pt-6">
       <div class="is-flex is-justify-content-space-between">
         <div class="title is-1 pb-4">Ingredientes</div>
-        <button class="button is-primary" @click="add">
+        <button class="button is-primary has-text-white" @click="add">
           <i class="fa fa-plus" />
         </button>
       </div>
@@ -62,10 +62,12 @@ export default {
           v-for="ingredient in ingredients"
           :key="ingredient.name"
         >
-          <ingredient-card
-            :ingredient="ingredient"
-            @click="select(ingredient)"
-          />
+          <a>
+            <ingredient-card
+              :ingredient="ingredient"
+              @click="select(ingredient)"
+            />
+          </a>
         </div>
       </div>
 

@@ -8,17 +8,17 @@ export default {
 <template>
     <div class="card">
         <div class="card-content">
-            <p class="title">
+            <p class="title has-text-white">
                 {{ ingredient.name }}
             </p>
-            <p class="subtitle">{{ ingredient.presentations.length }} presentaciones</p>
+            <p class="subtitle has-text-white">{{ ingredient.presentations.length }} presentaciones</p>
         </div>
     </div>
 </template>
 
 <style scoped>
 /* https://tobiasahlin.com/blog/how-to-animate-box-shadow/ */
-.card {
+/* .card {
     position: relative;
     display: inline-block;
     background-color: #fff;
@@ -53,5 +53,5 @@ export default {
 
 .card:hover::after {
     opacity: 1;
-}
+} */
 </style>

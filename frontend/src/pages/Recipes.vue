@@ -52,7 +52,7 @@ export default {
     <div class="container px-4 pt-6">
       <div class="is-flex is-justify-content-space-between">
         <div class="title is-1 pb-4">Recetas</div>
-        <button class="button is-primary" @click="add">
+        <button class="button is-primary has-text-white" @click="add">
           <i class="fa fa-plus" />
         </button>
       </div>

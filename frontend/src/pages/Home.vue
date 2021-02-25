@@ -102,7 +102,7 @@ export default {
             <div class="field">
               <div class="control">
                 <button
-                  class="button is-primary is-fullwidth"
+                  class="button is-primary is-fullwidth has-text-white"
                   :class="{ 'is-loading': state.loading }"
                   type="submit"
                 >
