@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "babel-node app.js",
-    "dev": "nodemon --exec babel-node app.js"
+    "dev": "nodemon --exec babel-node app.js",
+    "test": "mocha --require @babel/polyfill --require @babel/register --timeout 10000"
   },
   "dependencies": {
     "@babel/cli": "^7.10.5",
@@ -25,6 +26,11 @@
     "mongoose": "^5.10.0"
   },
   "devDependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "@babel/register": "^7.13.0",
+    "chai": "^4.3.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.3.0",
     "nodemon": "^2.0.4",
     "prettier": "^2.1.2"
   }

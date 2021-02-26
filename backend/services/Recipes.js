@@ -1,27 +1,27 @@
 import { Recipe } from "../db"
 import Router from "koa-router"
 
-const recipes = new Router({ prefix: "/recipes" })
+const router = new Router({ prefix: "/recipes" })
 
-recipes.post("/", async (ctx) => {
+router.post("/", async (ctx) => {
   ctx.body = await Recipe.create({
     ...ctx.request.body,
     user: ctx.state.user.id
   })
 })
 
-recipes.get("/", async (ctx) => {
+router.get("/", async (ctx) => {
   ctx.body = await Recipe.find({ user: ctx.state.user.id })
 })
 
-recipes.get("/:id", async (ctx) => {
+router.get("/:id", async (ctx) => {
   ctx.body = await Recipe.find({
     _id: ctx.params.id,
     user: ctx.state.user.id
   })
 })
 
-recipes.put("/:id", async (ctx) => {
+router.put("/:id", async (ctx) => {
   ctx.body = await Recipe.findOneAndUpdate(
     { _id: ctx.params.id, user: ctx.state.user.id },
     ctx.request.body,
@@ -29,11 +29,11 @@ recipes.put("/:id", async (ctx) => {
   )
 })
 
-recipes.delete("/:id", async (ctx) => {
+router.delete("/:id", async (ctx) => {
   ctx.body = await Recipe.findOneAndDelete({
     _id: ctx.params.id,
     user: ctx.state.user.id
   })
 })
 
-export default recipes.routes()
+export default router.routes()

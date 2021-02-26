@@ -1,5 +1,13 @@
-import { Auth, Ingredients, Recipes, Usages, User } from "./controllers"
-import { connect } from './db'
+import {
+  Auth,
+  User,
+  Ingredients,
+  Utensils,
+  Recipes,
+  IngredientUsages,
+  UtensilUsages
+} from "./services"
+import { connect } from "./db"
 import cors from "@koa/cors"
 import dotenv from "dotenv"
 import Koa from "koa"
@@ -11,10 +19,10 @@ dotenv.config()
 
 const app = new Koa()
 
-app.use(koaBody())
+app.use(koaBody({ multipart: true }))
 app.use(logger())
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   app.use(cors())
 }
 
@@ -29,11 +37,13 @@ app.use(async (ctx, next) => {
 app.use(Auth)
 app.use(koaJwt({ secret: process.env.SECRET }))
 
+app.use(User)
 app.use(Recipes)
 app.use(Ingredients)
-app.use(Usages)
-app.use(User)
+app.use(Utensils)
+app.use(IngredientUsages)
+app.use(UtensilUsages)
 
 connect()
 
-app.listen(process.env.PORT)
+export const server = app.listen(process.env.PORT)

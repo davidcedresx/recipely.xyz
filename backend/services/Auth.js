@@ -3,10 +3,14 @@ import bcrypt from "bcrypt"
 import jsonwebtoken from "jsonwebtoken"
 import Router from "koa-router"
 
-const auth = new Router({ prefix: "/auth" })
+const router = new Router({ prefix: "/auth" })
 
-auth.post("/signup", async (ctx) => {
+router.post("/signup", async (ctx) => {
   const { password, username } = ctx.request.body
+
+  if (!username) throw new Error("username missing")
+  if (!password) throw new Error("password missing")
+
   const user = new User({
     username,
     password: bcrypt.hashSync(password, +process.env.SALT)
@@ -17,7 +21,7 @@ auth.post("/signup", async (ctx) => {
   }
 })
 
-auth.post("/signin", async (ctx) => {
+router.post("/signin", async (ctx) => {
   const { username, password } = ctx.request.body
 
   if (!username) throw new Error("username missing")
@@ -34,4 +38,4 @@ auth.post("/signin", async (ctx) => {
   }
 })
 
-export default auth.routes()
+export default router.routes()

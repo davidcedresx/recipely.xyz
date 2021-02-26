@@ -1,10 +1,19 @@
 import mongoose from "mongoose"
 
-
 export const connect = () => {
   // prepare two possible database uris
   const development_uri = "mongodb://localhost:27017/recipely"
-  const production_uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
+  const production_uri = [
+    "mongodb+srv://",
+    process.env.DB_USER +
+      ":" +
+      process.env.DB_PASSWORD +
+      "@" +
+      process.env.DB_HOST +
+      "/" +
+      process.env.DB_NAME,
+    "?retryWrites=true&w=majority"
+  ].join("")
 
   mongoose.connect(
     process.env.NODE_ENV === "production" ? production_uri : development_uri,
@@ -21,50 +30,75 @@ export const connect = () => {
   db.once("open", () => console.log("connection stablished"))
 }
 
-// schemas
+// ########################### SCHEMAS ###################################
 const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true },
   password: { type: String, required: true },
-  profit: { type: Number, default: 0, min: [0, 'Profit must be positive'] }, 
+  profit: {
+    type: Number,
+    default: 0,
+    min: [0, "Profit must be a natural number"]
+  }
 })
 
-const IngredientSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  presentations: [
-    {
-      price: { type: Number, required: true },
-      amount: { type: Number, required: true },
-      unit: { type: String, required: true }
-    }
-  ],
+const UtensilSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  price: {
+    type: Number,
+    required: true,
+    min: [0, "Price must be a natural number"]
+  },
+  amount: {
+    type: Number,
+    required: true,
+    min: [0, "Amount must be a natural number"]
+  },
   user: { type: mongoose.ObjectId, required: true }
 })
 
-const RecipeSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true, unique: true },
-    user: { type: mongoose.ObjectId, required: true },
+const IngredientSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  price: {
+    type: Number,
+    required: true,
+    min: [0, "Price must be a natural number"]
   },
-  {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
-  }
-)
-
-RecipeSchema.virtual('price').get(async function () {
-  console.log('calculating price for recipe', this.name)
-  return 99.99
+  amount: {
+    type: Number,
+    required: true,
+    min: [0, "Amount must be a natural number"]
+  },
+  unit: { type: String, required: true, enum: ['KG', 'GR', 'LT', 'ML', 'UNIT'] },
+  user: { type: mongoose.ObjectId, required: true }
 })
 
-const UsageSchema = new mongoose.Schema({
-  recipe: { type: mongoose.ObjectId, required: true, ref: 'Recipe' },
-  ingredient: { type: mongoose.ObjectId, required: true, ref: 'Ingredient' },
+const RecipeSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  user: { type: mongoose.ObjectId, required: true, enum: ['KG', 'GR', 'LT', 'ML', 'UNIT'] }
+})
+
+const IngredientUsageSchema = new mongoose.Schema({
+  recipe: { type: mongoose.ObjectId, required: true, ref: "Recipe" },
+  ingredient: { type: mongoose.ObjectId, required: true, ref: "Ingredient" },
   amount: { type: Number, required: true },
-  unit: { type: String, required: true }
+  unit: { type: String, required: true },
+  user: { type: mongoose.ObjectId, required: true }
 })
 
-// models
+const UtensilUsageSchema = new mongoose.Schema({
+  recipe: { type: mongoose.ObjectId, required: true, ref: "Recipe" },
+  utensil: { type: mongoose.ObjectId, required: true, ref: "Utensil" },
+  amount: { type: Number, required: true },
+  user: { type: mongoose.ObjectId, required: true }
+})
+
+// ########################### MODELS ###################################
 export const User = mongoose.model("User", UserSchema)
 export const Ingredient = mongoose.model("Ingredient", IngredientSchema)
+export const Utensil = mongoose.model("Utensil", UtensilSchema)
 export const Recipe = mongoose.model("Recipe", RecipeSchema)
-export const Usage = mongoose.model("Usage", UsageSchema)
+export const IngredientUsage = mongoose.model(
+  "IngredientUsage",
+  IngredientUsageSchema
+)
+export const UtensilUsage = mongoose.model("UtensilUsage", UtensilUsageSchema)
