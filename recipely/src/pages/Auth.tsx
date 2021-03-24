@@ -1,7 +1,7 @@
-import { Button, Col, Input, Row, Typography, Form, message } from "antd"
+import { Button, Col, Input, Row, Typography, Form, message, Tabs } from "antd"
 import { Link, useHistory } from "react-router-dom"
 import { useState } from "react"
-import * as Api from "../api"
+import Api from "../api/client"
 import LogoUrl from "../assets/logo.svg"
 import styled from "styled-components"
 
@@ -28,71 +28,64 @@ function Navbar() {
   )
 }
 
-const HeaderStyles = styled.div`
-  padding-top: 5rem;
-
-  h1 {
-    font-size: 4rem;
-    margin-right: 2rem;
-  }
-`
-
-function LoginForm() {
+function CustomForm(props: { action: string; title: string }) {
   const history = useHistory()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
   async function onSubmit() {
     try {
-      const { token } = await Api.Auth.login(username, password)
+      const { token } = (await Api.post("/auth/" + props.action, {
+        username,
+        password
+      })) as { token: string }
+
       localStorage.setItem("token", token)
       history.push("/home")
     } catch (error) {
-      console.log(error)
       message.error(error.message)
     }
   }
 
   return (
     <>
-      <HeaderStyles>
-        <Row justify="center">
-          <Col flex="0">
-            <Typography.Title>Login</Typography.Title>
-            <Typography.Paragraph>
-              Put your credentials below
-            </Typography.Paragraph>
+      <Row justify="center">
+        <Col>
+          <Typography.Paragraph>
+            Put your credentials below
+          </Typography.Paragraph>
 
-            <Form onFinish={onSubmit}>
-              <Form.Item name="username">
-                <Input
-                  placeholder="username"
-                  type="text"
-                  size="large"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </Form.Item>
+          <Form onFinish={onSubmit}>
+            <Form.Item name="username">
+              <Input
+                placeholder="username"
+                type="text"
+                size="large"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </Form.Item>
 
-              <Form.Item name="password">
-                <Input
-                  placeholder="password"
-                  type="password"
-                  size="large"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Form.Item>
+            <Form.Item name="password">
+              <Input
+                placeholder="password"
+                type="password"
+                size="large"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </Form.Item>
 
-              <Form.Item>
-                <Button size="large" type="primary" htmlType="submit">
-                  Enter
-                </Button>
-              </Form.Item>
-            </Form>
-          </Col>
-        </Row>
-      </HeaderStyles>
+            <Form.Item>
+              <Button size="large" type="primary" htmlType="submit">
+                {props.title}
+              </Button>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
     </>
   )
 }
@@ -103,7 +96,18 @@ export default function Auth() {
       <Row justify="center">
         <Col xs={20} sm={16} lg={10}>
           <Navbar />
-          <LoginForm />
+          <Row justify="center">
+            <Col>
+              <Tabs defaultActiveKey="login" size="large">
+                <Tabs.TabPane tab="Login" key="login">
+                  <CustomForm action="signin" title="Sign in" />
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="Register" key="register">
+                  <CustomForm action="signup" title="Sign up" />
+                </Tabs.TabPane>
+              </Tabs>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </>
