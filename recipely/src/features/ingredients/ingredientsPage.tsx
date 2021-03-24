@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useState } from "react"
 import { Typography, Table, Tag, Space, Row, Col, Button } from "antd"
-import { Layout, NewIngredient } from "../components"
+import { Layout, NewIngredient } from "../../components"
 
 const columns = [
   {
