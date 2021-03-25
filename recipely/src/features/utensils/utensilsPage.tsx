@@ -1,3 +1,5 @@
+import { FC } from "react"
+import { Navbar } from "../../components"
 import {
   Table,
   Thead,
@@ -7,25 +9,23 @@ import {
   Th,
   Td,
   TableCaption,
-  Heading,
   HStack,
+  Heading,
   IconButton
 } from "@chakra-ui/react"
-import { Navbar } from "../../components"
-import { FC } from "react"
 import { FaPlus } from "react-icons/fa"
 
-const Ingredients: FC = () => {
+const Utensils: FC = () => {
   return (
     <>
       <Navbar />
 
       <HStack spacing="24px">
-        <Heading my={6}>Ingredients</Heading>
+        <Heading my={6}>Utensils</Heading>
         <IconButton aria-label="add recipe" icon={<FaPlus />} />
       </HStack>
 
-      <Table variant="striped" colorScheme="pink" size="lg">
+      <Table variant="striped" colorScheme="teal" size="lg">
         <TableCaption>Imperial to metric conversion factors</TableCaption>
         <Thead>
           <Tr>
@@ -63,4 +63,4 @@ const Ingredients: FC = () => {
   )
 }
 
-export default Ingredients
+export default Utensils

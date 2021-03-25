@@ -1,115 +1,105 @@
-import { Button, Col, Input, Row, Typography, Form, message, Tabs } from "antd"
-import { Link, useHistory } from "react-router-dom"
-import { useState } from "react"
-import Api from "../../api/client"
-import LogoUrl from "../../assets/logo.svg"
+// global state
+import { asyncLogin } from "./authSlice"
+import { useAppDispatch } from "../../app/store"
+
+// hooks and stuff
+import { useHistory } from "react-router-dom"
+import { useForm } from "react-hook-form"
+
+// components and styles
 import styled from "styled-components"
+import {
+  Box,
+  Heading,
+  FormControl,
+  FormLabel,
+  Input,
+  FormHelperText,
+  Button,
+  useToast
+} from "@chakra-ui/react"
+import { Navbar } from "../../components"
 
-const NavbarStyles = styled.div`
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-
-  button {
-    margin-right: 2rem;
-  }
+const CardStyles = styled.div`
+  padding-top: 10rem;
 `
 
-function Navbar() {
-  return (
-    <NavbarStyles>
-      <Row align="middle">
-        <Col>
-          <Link to="/">
-            <img src={LogoUrl} alt="biscuits" width={64} />
-          </Link>
-        </Col>
-      </Row>
-    </NavbarStyles>
-  )
+interface FormValues {
+  username: string
+  password: string
 }
 
-function CustomForm(props: { action: string; title: string }) {
+const AuthCard = () => {
+  const { register, handleSubmit } = useForm()
   const history = useHistory()
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const dispatch = useAppDispatch()
+  const toast = useToast()
 
-  async function onSubmit() {
-    try {
-      const { token } = (await Api.post("/auth/" + props.action, {
-        username,
-        password
-      })) as { token: string }
+  const onSubmit = async (data: FormValues) => {
+    const resultAction = await dispatch(
+      asyncLogin({ ...data, action: "signin" })
+    )
 
-      localStorage.setItem("token", token)
-      history.push("/home")
-    } catch (error) {
-      message.error(error.message)
+    if (asyncLogin.fulfilled.match(resultAction)) {
+      history.replace("/home")
+    }
+
+    if (asyncLogin.rejected.match(resultAction)) {
+      toast({
+        title: "Error",
+        description: resultAction.error.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true
+      })
     }
   }
 
   return (
-    <>
-      <Row justify="center">
-        <Col>
-          <Typography.Paragraph>
-            Put your credentials below
-          </Typography.Paragraph>
+    <CardStyles>
+      <Heading mb={6} fontWeight="lighter">
+        Hi there!
+      </Heading>
+      <Box boxShadow="base" p={6} rounded="md">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl mb={6}>
+            <FormLabel>Username</FormLabel>
+            <Input
+              type="text"
+              placeholder="sickpizza?"
+              name="username"
+              ref={register({ required: true })}
+              required
+            />
+            <FormHelperText>I bet yours is very cool</FormHelperText>
+          </FormControl>
 
-          <Form onFinish={onSubmit}>
-            <Form.Item name="username">
-              <Input
-                placeholder="username"
-                type="text"
-                size="large"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </Form.Item>
+          <FormControl mb={6}>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type="password"
+              placeholder="******"
+              name="password"
+              ref={register({ required: true })}
+              required
+            />
+            <FormHelperText>It's a secret</FormHelperText>
+          </FormControl>
 
-            <Form.Item name="password">
-              <Input
-                placeholder="password"
-                type="password"
-                size="large"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </Form.Item>
-
-            <Form.Item>
-              <Button size="large" type="primary" htmlType="submit">
-                {props.title}
-              </Button>
-            </Form.Item>
-          </Form>
-        </Col>
-      </Row>
-    </>
+          <Button type="submit" colorScheme="teal">
+            Submit
+          </Button>
+        </form>
+      </Box>
+    </CardStyles>
   )
 }
 
 export default function Auth() {
   return (
     <>
-      <Row justify="center">
-        <Col xs={20} sm={16} lg={10}>
-          <Navbar />
-          <Row justify="center">
-            <Col>
-              <Tabs defaultActiveKey="login" size="large">
-                <Tabs.TabPane tab="Login" key="login">
-                  <CustomForm action="signin" title="Sign in" />
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="Register" key="register">
-                  <CustomForm action="signup" title="Sign up" />
-                </Tabs.TabPane>
-              </Tabs>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+      <Navbar right={false} />
+      <AuthCard />
     </>
   )
 }

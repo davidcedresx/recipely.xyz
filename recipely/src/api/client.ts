@@ -25,10 +25,10 @@ instance.interceptors.request.use(function (config) {
 
 // Add a response interceptor
 instance.interceptors.response.use(function (response) {
-    return response;
+    console.log('axios response: ', response)
+    return response.data
 }, function (error) {
-    const _error = error?.response?.data ? new Error(error.response.data) : error
-    return Promise.reject(_error);
+    return Promise.reject({ message: error?.response?.data });
 });
 
 export default instance

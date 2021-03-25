@@ -1,10 +1,18 @@
 import { configureStore } from '@reduxjs/toolkit'
-import ingredientsReducer from '../features/ingredients/ingredientsSlice'
+import { useDispatch } from 'react-redux'
 import authReducer from '../features/auth/authSlice'
+import ingredientsReducer from '../features/ingredients/ingredientsSlice'
 
-export default configureStore({
+const store = configureStore({
     reducer: {
         ingredients: ingredientsReducer,
         auth: authReducer,
     }
 })
+
+export type RootState = ReturnType<typeof store.getState>
+
+export type AppDispatch = typeof store.dispatch
+export const useAppDispatch = () => useDispatch<AppDispatch>() // Export a hook that can be reused to resolve types
+
+export default store
