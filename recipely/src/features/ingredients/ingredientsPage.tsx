@@ -1,41 +1,51 @@
+import { FC } from "react"
+
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
-  Td,
   TableCaption,
   Heading,
   HStack,
-  IconButton
+  IconButton,
+  useDisclosure
 } from "@chakra-ui/react"
 import { Navbar } from "../../components"
-import { FC } from "react"
 import { FaPlus } from "react-icons/fa"
 
+// local components
+import Modal from "./ingredientModal"
+
 const Ingredients: FC = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   return (
     <>
       <Navbar />
 
       <HStack spacing="24px">
         <Heading my={6}>Ingredients</Heading>
-        <IconButton aria-label="add recipe" icon={<FaPlus />} />
+        <IconButton
+          aria-label="add recipe"
+          icon={<FaPlus />}
+          onClick={onOpen}
+        />
       </HStack>
 
       <Table variant="striped" colorScheme="pink" size="lg">
-        <TableCaption>Imperial to metric conversion factors</TableCaption>
+        <TableCaption>0 Ingredients</TableCaption>
         <Thead>
           <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
+            <Th>Name</Th>
+            <Th isNumeric>Price</Th>
+            <Th isNumeric>Amount</Th>
+            <Th>Unit</Th>
           </Tr>
         </Thead>
         <Tbody>
-          <Tr>
+          {/* <Tr>
             <Td>inches</Td>
             <Td>millimetres (mm)</Td>
             <Td isNumeric>25.4</Td>
@@ -49,16 +59,11 @@ const Ingredients: FC = () => {
             <Td>yards</Td>
             <Td>metres (m)</Td>
             <Td isNumeric>0.91444</Td>
-          </Tr>
+          </Tr> */}
         </Tbody>
-        <Tfoot>
-          <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
-          </Tr>
-        </Tfoot>
       </Table>
+
+      <Modal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

@@ -41,7 +41,7 @@ const AuthCard = () => {
     )
 
     if (asyncLogin.fulfilled.match(resultAction)) {
-      history.replace("/home")
+      history.replace("/init")
     }
 
     if (asyncLogin.rejected.match(resultAction)) {

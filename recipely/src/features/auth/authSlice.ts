@@ -14,11 +14,13 @@ export const asyncLogin = createAsyncThunk('asyncLogin', async ({ username, pass
     return response
 })
 
-/* Reducer */
+/* Types */
 
 interface State {
     token: string
 }
+
+/* State */
 
 const initialState = {
     token: localStorage.getItem('token') ?? ''
@@ -42,7 +44,7 @@ export const authSlice = createSlice({
         })
 
         builder.addCase(asyncLogin.rejected, (state, action) => {
-            // nothing to do, handled after dispatch
+            // nothing to do, handled on component
         })
     }
 })

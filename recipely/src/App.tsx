@@ -13,6 +13,7 @@ function App() {
           <BrowserRouter>
             <Route path="/" exact component={Pages.Landing} />
             <Route path="/start" exact component={Pages.Auth} />
+            <Private path="/init" exact component={Pages.Initializer} />
             <Private path="/home" exact component={Pages.Home} />
             <Private path="/recipes" exact component={Pages.Recipes} />
             <Private path="/ingredients" exact component={Pages.Ingredients} />

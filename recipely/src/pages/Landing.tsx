@@ -18,8 +18,8 @@ function Header() {
         >
           Recipely
         </Heading>
-        <Heading mb={8} size="md" fontWeight="lighter">
-          Management tool for the home cook
+        <Heading mb={8} size="md" fontWeight="lighter" fontSize="28px">
+          Management software for the home cook
         </Heading>
         <Button colorScheme="pink">Learn more</Button>
       </Box>
