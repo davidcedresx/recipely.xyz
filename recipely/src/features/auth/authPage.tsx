@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 // global state
 import { asyncLogin } from "./authSlice"
 import { useAppDispatch } from "../../app/store"
@@ -30,12 +32,15 @@ interface FormValues {
 }
 
 const AuthCard = () => {
+  const [loading, setLoading] = useState(false)
   const { register, handleSubmit } = useForm()
   const history = useHistory()
   const dispatch = useAppDispatch()
   const toast = useToast()
 
   const onSubmit = async (data: FormValues) => {
+    setLoading(true)
+
     const resultAction = await dispatch(
       asyncLogin({ ...data, action: "signin" })
     )
@@ -86,7 +91,7 @@ const AuthCard = () => {
             <FormHelperText>It's a secret</FormHelperText>
           </FormControl>
 
-          <Button type="submit" colorScheme="teal">
+          <Button type="submit" colorScheme="teal" isLoading={loading}>
             Submit
           </Button>
         </form>

@@ -4,6 +4,7 @@ import styled from "styled-components"
 
 import { useAppDispatch } from "../app/store"
 import { asyncFetch as asyncIngredientsFetch } from "../features/ingredients/ingredientsSlice"
+import { asyncFetch as asyncUtensilsFetch } from "../features/utensils/utensilsSlice"
 import { useHistory } from "react-router"
 
 const LoaderStyles = styled.div`
@@ -21,10 +22,26 @@ const Fetcher: FC = () => {
   const toast = useToast()
 
   useEffect(() => {
+    /* This method should download all rows for all entities in the backend
+        this is a bit harsh but it is not expected to grow that much and it works for now
+
+        TODO:
+        - fetch recipes
+        - fetch utensils
+        - fetch ingredientUsages
+        - fetch utensilUsages
+    */
     const initialize = async () => {
       const fetchIngredientsAction = await dispatch(asyncIngredientsFetch())
 
       if (asyncIngredientsFetch.rejected.match(fetchIngredientsAction)) {
+        // handle error
+        return
+      }
+
+      const fetchUtensilsAction = await dispatch(asyncUtensilsFetch())
+
+      if (asyncUtensilsFetch.rejected.match(fetchUtensilsAction)) {
         // handle error
         return
       }

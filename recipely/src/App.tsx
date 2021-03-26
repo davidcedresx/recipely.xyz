@@ -5,9 +5,15 @@ import * as Pages from "./pages"
 import store from "./app/store"
 import { Layout, Private } from "./components"
 
+// import { PersistGate } from "redux-persist/integration/react"
+// import { persistStore } from "redux-persist"
+
 function App() {
+  // const persistor = persistStore(store)
+
   return (
     <Provider store={store}>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
       <ChakraProvider>
         <Layout>
           <BrowserRouter>
@@ -23,6 +29,7 @@ function App() {
           </BrowserRouter>
         </Layout>
       </ChakraProvider>
+      {/* </PersistGate> */}
     </Provider>
   )
 }

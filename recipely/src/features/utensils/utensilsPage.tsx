@@ -1,64 +1,100 @@
-import { FC } from "react"
-import { Navbar } from "../../components"
+import { FC, useMemo, useState } from "react"
+
+import { useSelector } from "react-redux"
+import { RootState } from "../../app/store"
+import { Utensil } from "./utensilsSlice"
+
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
   TableCaption,
-  HStack,
   Heading,
-  IconButton
+  HStack,
+  IconButton,
+  useDisclosure
 } from "@chakra-ui/react"
+import { Navbar } from "../../components"
 import { FaPlus } from "react-icons/fa"
+import styled from "styled-components"
+
+// local components
+import Modal from "./utensilModal"
+
+const TableStyles = styled.div`
+  .row:hover {
+    cursor: pointer;
+    border-right: 1px dashed black;
+  }
+`
 
 const Utensils: FC = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const utensils = useSelector((store: RootState) => store.utensils.utensils)
+
+  const utensilCount = useMemo(() => utensils.length, [utensils])
+
+  const [selectedUtensil, setSelectedUtensil] = useState<Utensil>()
+
+  const onModalClose = () => {
+    setSelectedUtensil(undefined)
+    onClose()
+  }
+
+  const selectUtensil = (utensil: Utensil) => {
+    setSelectedUtensil(utensil)
+    onOpen()
+  }
+
+  const onCreate = () => {
+    setSelectedUtensil(undefined)
+    onOpen()
+  }
+
   return (
     <>
       <Navbar />
 
       <HStack spacing="24px">
         <Heading my={6}>Utensils</Heading>
-        <IconButton aria-label="add recipe" icon={<FaPlus />} />
+        <IconButton
+          aria-label="add recipe"
+          icon={<FaPlus />}
+          onClick={onCreate}
+        />
       </HStack>
 
-      <Table variant="striped" colorScheme="teal" size="lg">
-        <TableCaption>Imperial to metric conversion factors</TableCaption>
-        <Thead>
-          <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>inches</Td>
-            <Td>millimetres (mm)</Td>
-            <Td isNumeric>25.4</Td>
-          </Tr>
-          <Tr>
-            <Td>feet</Td>
-            <Td>centimetres (cm)</Td>
-            <Td isNumeric>30.48</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-        </Tbody>
-        <Tfoot>
-          <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
-          </Tr>
-        </Tfoot>
-      </Table>
+      <TableStyles>
+        <Table variant="striped" colorScheme="pink" size="lg">
+          <TableCaption>{utensilCount} Utensils</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>Name</Th>
+              <Th isNumeric>Price</Th>
+              <Th isNumeric>Amount</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {utensils.map((utensil, index) => (
+              <Tr
+                className="row"
+                key={index}
+                onClick={() => selectUtensil(utensil)}
+              >
+                <Td>{utensil.name}</Td>
+                <Td isNumeric>$ {utensil.price}</Td>
+                <Td isNumeric>{utensil.amount}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableStyles>
+
+      <Modal isOpen={isOpen} onClose={onModalClose} utensil={selectedUtensil} />
     </>
   )
 }

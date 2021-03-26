@@ -68,13 +68,17 @@ const IngredientSchema = new mongoose.Schema({
     required: true,
     min: [0, "Amount must be a natural number"]
   },
-  unit: { type: String, required: true, enum: ['KG', 'GR', 'LT', 'ML', 'UNIT'] },
+  unit: {
+    type: String,
+    required: true,
+    enum: ["KG", "GR", "LT", "ML", "UNIT"]
+  },
   user: { type: mongoose.ObjectId, required: true }
 })
 
 const RecipeSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  user: { type: mongoose.ObjectId, required: true, enum: ['KG', 'GR', 'LT', 'ML', 'UNIT'] }
+  user: { type: mongoose.ObjectId, required: true }
 })
 
 const IngredientUsageSchema = new mongoose.Schema({

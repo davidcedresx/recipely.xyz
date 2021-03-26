@@ -3,20 +3,20 @@ import API from "../../api/client"
 
 /* Thunks */
 
-export const asyncCreate = createAsyncThunk('asyncCreate', async (ingredient: Ingredient) => {
-    return await API.post("/ingredients/", ingredient) as Ingredient[]
+export const asyncCreate = createAsyncThunk('asyncIngredientCreate', async (ingredient: Ingredient) => {
+    return await API.post("/ingredients/", ingredient) as Ingredient
 })
 
-export const asyncFetch = createAsyncThunk('asyncFetch', async () => {
+export const asyncFetch = createAsyncThunk('asyncIngredientFetch', async () => {
     return await API.get("/ingredients/") as Ingredient[]
 })
 
-export const asyncUpdate = createAsyncThunk('asyncUpdate', async (ingredient: Ingredient) => {
-    return await API.put("/ingredients/" + ingredient._id, ingredient) as Ingredient[]
+export const asyncUpdate = createAsyncThunk('asyncIngredientUpdate', async (ingredient: Ingredient) => {
+    return await API.put("/ingredients/" + ingredient._id, ingredient) as Ingredient
 })
 
-export const asyncDelete = createAsyncThunk('asyncDelete', async (ingredient: Ingredient) => {
-    return await API.delete("/ingredients/" + ingredient._id) as Ingredient[]
+export const asyncDelete = createAsyncThunk('asyncIngredientDelete', async (ingredient: Ingredient) => {
+    return await API.delete("/ingredients/" + ingredient._id) as Ingredient
 })
 
 /* Types */
@@ -29,7 +29,7 @@ enum Unit {
     UNIT
 }
 
-interface Ingredient {
+export interface Ingredient {
     _id: string
     name: string
     price: number
@@ -52,27 +52,29 @@ export const ingredientsSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: builder => {
-        // creation
-        builder.addCase(asyncCreate.pending, (state, action) => {
-            console.log('creation started', action)
-        })
+        // create
         builder.addCase(asyncCreate.fulfilled, (state, action) => {
             console.log('creation finished', action)
+            state.ingredients.push(action.payload)
         })
-        builder.addCase(asyncCreate.rejected, (state, action) => {
-            console.log('creation finished', action)
+
+        // update
+        builder.addCase(asyncUpdate.fulfilled, (state, action) => {
+            console.log('update finished', action)
+            const index = state.ingredients.findIndex(ingredient => ingredient._id === action.payload._id)
+            state.ingredients[index] = action.payload
         })
 
         // fetching
-        builder.addCase(asyncFetch.pending, (state, action) => {
-            console.log('fetch started', action)
-        })
         builder.addCase(asyncFetch.fulfilled, (state, action) => {
-            console.log('fetch ended', action)
+            console.log('fetch ended', state, action)
             state.ingredients = action.payload
         })
-        builder.addCase(asyncFetch.rejected, (state, action) => {
-            console.log('fetch failed', action)
+
+        // deleting
+        builder.addCase(asyncDelete.fulfilled, (state, action) => {
+            const index = state.ingredients.findIndex(ingredient => ingredient._id === action.payload._id)
+            state.ingredients.splice(index, 1)
         })
 
     }
