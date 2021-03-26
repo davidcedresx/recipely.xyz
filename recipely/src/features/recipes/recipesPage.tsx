@@ -1,64 +1,102 @@
-import { FC } from "react"
-import { Navbar } from "../../components"
+import { FC, useMemo, useState } from "react"
+
+import { useSelector } from "react-redux"
+import { RootState } from "../../app/store"
+import { Recipe } from "./recipesSlice"
+
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
   TableCaption,
   Heading,
   HStack,
-  IconButton
+  IconButton,
+  useDisclosure
 } from "@chakra-ui/react"
+import { Navbar } from "../../components"
 import { FaPlus } from "react-icons/fa"
+import styled from "styled-components"
+
+// local components
+import Modal from "./recipeModal"
+
+const TableStyles = styled.div`
+  .row:hover {
+    cursor: pointer;
+    border-right: 1px dashed black;
+  }
+`
 
 const Recipes: FC = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const recipes = useSelector((store: RootState) => store.recipes.recipes)
+
+  const recipeCount = useMemo(() => recipes.length, [recipes])
+
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe>()
+
+  const onModalClose = () => {
+    setSelectedRecipe(undefined)
+    onClose()
+  }
+
+  const selectRecipe = (recipe: Recipe) => {
+    setSelectedRecipe(recipe)
+    onOpen()
+  }
+
+  const onCreate = () => {
+    setSelectedRecipe(undefined)
+    onOpen()
+  }
+
   return (
     <>
       <Navbar />
 
       <HStack spacing="24px">
         <Heading my={6}>Recipes</Heading>
-        <IconButton aria-label="add recipe" icon={<FaPlus />} />
+        <IconButton
+          aria-label="add recipe"
+          icon={<FaPlus />}
+          onClick={onCreate}
+        />
       </HStack>
 
-      <Table variant="striped" colorScheme="teal" size="lg">
-        <TableCaption>Imperial to metric conversion factors</TableCaption>
-        <Thead>
-          <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>inches</Td>
-            <Td>millimetres (mm)</Td>
-            <Td isNumeric>25.4</Td>
-          </Tr>
-          <Tr>
-            <Td>feet</Td>
-            <Td>centimetres (cm)</Td>
-            <Td isNumeric>30.48</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-        </Tbody>
-        <Tfoot>
-          <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
-          </Tr>
-        </Tfoot>
-      </Table>
+      <TableStyles>
+        <Table variant="striped" colorScheme="pink" size="lg">
+          <TableCaption>{recipeCount} Recipes</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>Name</Th>
+              <Th isNumeric>Pieces</Th>
+              <Th isNumeric>Price</Th>
+              <Th isNumeric>Portion</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {recipes.map((recipe, index) => (
+              <Tr
+                className="row"
+                key={index}
+                onClick={() => selectRecipe(recipe)}
+              >
+                <Td>{recipe.name}</Td>
+                <Td isNumeric>{recipe.pieces}</Td>
+                <Td isNumeric>$ 999</Td>
+                <Td isNumeric>$ 2.5</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableStyles>
+
+      <Modal isOpen={isOpen} onClose={onModalClose} recipe={selectedRecipe} />
     </>
   )
 }

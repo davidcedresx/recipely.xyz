@@ -5,6 +5,7 @@ import styled from "styled-components"
 import { useAppDispatch } from "../app/store"
 import { asyncFetch as asyncIngredientsFetch } from "../features/ingredients/ingredientsSlice"
 import { asyncFetch as asyncUtensilsFetch } from "../features/utensils/utensilsSlice"
+import { asyncFetch as asyncRecipesFetch } from "../features/recipes/recipesSlice"
 import { useHistory } from "react-router"
 
 const LoaderStyles = styled.div`
@@ -32,19 +33,11 @@ const Fetcher: FC = () => {
         - fetch utensilUsages
     */
     const initialize = async () => {
-      const fetchIngredientsAction = await dispatch(asyncIngredientsFetch())
-
-      if (asyncIngredientsFetch.rejected.match(fetchIngredientsAction)) {
-        // handle error
-        return
-      }
-
-      const fetchUtensilsAction = await dispatch(asyncUtensilsFetch())
-
-      if (asyncUtensilsFetch.rejected.match(fetchUtensilsAction)) {
-        // handle error
-        return
-      }
+      await Promise.all([
+        dispatch(asyncIngredientsFetch()),
+        dispatch(asyncUtensilsFetch()),
+        dispatch(asyncRecipesFetch())
+      ])
 
       toast({
         title: "Welcome",

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import authReducer from '../features/auth/authSlice'
 import ingredientsReducer from '../features/ingredients/ingredientsSlice'
 import utensilsReducer from '../features/utensils/utensilsSlice'
+import recipesReducer from '../features/recipes/recipesSlice'
 
 // import storage from 'redux-persist/lib/storage'
 // import { persistReducer } from 'redux-persist'
@@ -17,7 +18,8 @@ import utensilsReducer from '../features/utensils/utensilsSlice'
 const rootReducer = combineReducers({
     ingredients: ingredientsReducer,
     auth: authReducer,
-    utensils: utensilsReducer
+    utensils: utensilsReducer,
+    recipes: recipesReducer,
 })
 
 // const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -78,6 +78,7 @@ const IngredientSchema = new mongoose.Schema({
 
 const RecipeSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  pieces: { type: Number, required: true },
   user: { type: mongoose.ObjectId, required: true }
 })
 

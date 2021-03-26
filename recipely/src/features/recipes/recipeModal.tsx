@@ -20,36 +20,36 @@ import {
 } from "@chakra-ui/react"
 
 import { useAppDispatch } from "../../app/store"
-import { Utensil, asyncCreate, asyncUpdate, asyncDelete } from "./utensilsSlice"
+import { Recipe, asyncCreate, asyncUpdate, asyncDelete } from "./recipesSlice"
 
 interface Props {
   onClose: () => void
   isOpen: boolean
-  utensil?: Utensil
+  recipe?: Recipe
 }
 
 /* TODO
     - Find out why the hell react-hook-form is not parsing amount field as number
     - Optionally, it would be better to just use NumberInput / NumberInputField from chakra
 */
-const UtensilModal: FC<Props> = ({ isOpen, onClose, utensil }) => {
+const RecipeModal: FC<Props> = ({ isOpen, onClose, recipe }) => {
   const dispatch = useAppDispatch()
   const toast = useToast()
-  const { register, handleSubmit } = useForm<Utensil>()
+  const { register, handleSubmit } = useForm<Recipe>()
 
-  const action = useMemo(() => (utensil === undefined ? "create" : "update"), [
-    utensil
+  const action = useMemo(() => (recipe === undefined ? "create" : "update"), [
+    recipe
   ])
 
-  const onSubmit = async (data: Utensil) => {
+  const onSubmit = async (data: Recipe) => {
     const asyncAction = action === "create" ? asyncCreate : asyncUpdate
 
     // spread needed for update, otherwise _id would be missing
-    const resultAction = await dispatch(asyncAction({ ...utensil, ...data }))
+    const resultAction = await dispatch(asyncAction({ ...recipe, ...data }))
 
     if (asyncAction.fulfilled.match(resultAction)) {
       toast({
-        title: "Utensil " + action + "d", // sick way of translating verb to past
+        title: "Recipe " + action + "d", // sick way of translating verb to past
         status: "success",
         duration: 2000,
         isClosable: true
@@ -69,11 +69,11 @@ const UtensilModal: FC<Props> = ({ isOpen, onClose, utensil }) => {
   }
 
   const onDelete = async () => {
-    const resultAction = await dispatch(asyncDelete(utensil as Utensil))
+    const resultAction = await dispatch(asyncDelete(recipe as Recipe))
 
     if (asyncDelete.fulfilled.match(resultAction)) {
       toast({
-        title: "Utensil deleted",
+        title: "Recipe deleted",
         status: "success",
         duration: 2000,
         isClosable: true
@@ -97,7 +97,7 @@ const UtensilModal: FC<Props> = ({ isOpen, onClose, utensil }) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {action === "create" ? "Create" : "Update"} Utensil
+          {action === "create" ? "Create" : "Update"} Recipe
         </ModalHeader>
         <ModalCloseButton />
 
@@ -109,40 +109,23 @@ const UtensilModal: FC<Props> = ({ isOpen, onClose, utensil }) => {
                 type="text"
                 placeholder="Birthday Candels"
                 name="name"
-                defaultValue={utensil?.name}
+                defaultValue={recipe?.name}
                 ref={register({ required: true })}
                 required
               />
               <FormHelperText>Use a name you can remember later</FormHelperText>
             </FormControl>
-
             <FormControl mb={6}>
-              <FormLabel>Price</FormLabel>
+              <FormLabel>Pieces</FormLabel>
               <Input
-                type="number"
-                placeholder="0"
-                step={0.1}
-                name="price"
-                defaultValue={utensil?.price}
-                ref={register({ required: true, min: 0 })}
-                required
-              />
-              <FormHelperText>How much does it cost you</FormHelperText>
-            </FormControl>
-
-            <FormControl mb={6}>
-              <FormLabel>Amount</FormLabel>
-              <Input
-                type="number"
-                placeholder="4"
-                name="amount"
-                defaultValue={utensil?.amount}
+                type="text"
+                placeholder="1"
+                name="pieces"
+                defaultValue={recipe?.pieces}
                 ref={register({ required: true })}
                 required
               />
-              <FormHelperText>
-                Amount of utensil the presentation comes with
-              </FormHelperText>
+              <FormHelperText>How much pieces will you get</FormHelperText>
             </FormControl>
           </ModalBody>
 
@@ -163,4 +146,4 @@ const UtensilModal: FC<Props> = ({ isOpen, onClose, utensil }) => {
   )
 }
 
-export default UtensilModal
+export default RecipeModal
