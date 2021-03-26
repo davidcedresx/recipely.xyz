@@ -40,7 +40,7 @@ const Settings: FC = () => {
         <Flex>
           <Button colorScheme="teal">Save</Button>
           <Spacer />
-          <Button variant="outline" colorScheme="pink" onClick={onLogout}>
+          <Button colorScheme="red" onClick={onLogout}>
             Log out
           </Button>
         </Flex>

@@ -69,7 +69,7 @@ const Recipes: FC = () => {
       </HStack>
 
       <TableStyles>
-        <Table variant="striped" colorScheme="pink" size="lg">
+        <Table variant="striped" colorScheme="teal" size="lg">
           <TableCaption>{recipeCount} Recipes</TableCaption>
           <Thead>
             <Tr>
