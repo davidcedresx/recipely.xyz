@@ -77,6 +77,8 @@ const Recipes: FC = () => {
               <Th isNumeric>Pieces</Th>
               <Th isNumeric>Price</Th>
               <Th isNumeric>Portion</Th>
+              <Th isNumeric>Ingredients</Th>
+              <Th isNumeric>Utensils</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -90,6 +92,8 @@ const Recipes: FC = () => {
                 <Td isNumeric>{recipe.pieces}</Td>
                 <Td isNumeric>$ 999</Td>
                 <Td isNumeric>$ 2.5</Td>
+                <Td isNumeric>2</Td>
+                <Td isNumeric>3</Td>
               </Tr>
             ))}
           </Tbody>

@@ -1,14 +1,88 @@
 # Recipely
 
-Pricing tool for the indie chef
+Management software for the home cook
 
 ## Features
 
-- Register ingredients and their presentations [done]
-- Register your recipes with their usages [done]
-- Register the profit you want to be making
-- The sell price will be calculated based on the usages and profit margin
+### Register ingredients
 
-## Golden Feature
-- The pricing will not only be calculated but optimized
-- Handle complex transformations, like mass to volume
+The user can register multiple ingredients, each ingredient consists of:
+
+- Name
+- Price
+- Unit
+- Amount
+
+Price, Unit and Amount are meant to work together, like in:
+
+    I bought `30` `pounds` of chocolate powder for only `9.99`
+
+## Register utensils
+
+The user can register multiple utensils, each utensil consists of:
+
+- Name
+- Price
+- Amount
+
+Think about them as **_unitless_** ingredients, like in:
+
+    I need to buy little birthday candels, they cost $10 the pack of 20, and each cake requires 5 of them
+
+## Register recipes
+
+Obvious feature, a recipe goes like this:
+
+- Name
+- List of ingredient it uses
+- List of utensils it uses
+- Pieces you expect to get from it
+
+The user defines each recipe with a list of ingredients, as well as the amount required of each,
+same goes for utensils, the user can basically be like:
+
+    I want to track this carrot cake, I need 3 carrots for each, 150 grams of flour and 500ml of Milk, also I need a plate to put it and 5 candels.
+
+_candels and plates should be registered as utensils, and carrots, flour and milk as ingredients._
+
+For doing this the user gets the benefit of automated price generation and tracking, so every ingredient and utensil usage will be taken into account.
+
+## Configure global earnings
+
+The user can configure a global earning margin that will be added to everything: both to recipes and their pieces.
+
+# Dev stuff
+
+## How to install
+
+- Install docker
+
+- Install docker compose
+
+- Clone this repo like:
+
+```
+git clone https://davidcedresx/recipely.xyz
+```
+
+- Run a local mongo server like:
+
+```
+sudo docker run --network host -d mongo
+```
+
+- Run local backend nodeJS server like:
+
+```
+cd backend
+npm i
+npm run dev
+```
+
+- Run local frontend CRA server like:
+
+```
+cd frontend
+npm i
+npm run dev
+```
